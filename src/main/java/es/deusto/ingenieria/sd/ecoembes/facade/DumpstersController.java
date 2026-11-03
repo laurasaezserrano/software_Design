@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
+import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
 import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
 import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
