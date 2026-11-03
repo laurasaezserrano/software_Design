@@ -46,7 +46,7 @@ public class EcoembesFacade {
         }
     }
 
-    // Logout: removes the token
+    // Log out: removes the token
     @PostMapping("/auth/logout")
     public ResponseEntity<Void> logout(@RequestParam("token") String token) {
         boolean loggedOut = authService.logout(token);
@@ -58,7 +58,7 @@ public class EcoembesFacade {
         }
     }
 
-    // Update dumpster info (called by the simulated sensor, no token)
+    // Update dumpster info
     @PutMapping("/dumpsters/{dumpsterId}/status")
     public ResponseEntity<Void> updateDumpster(@PathVariable("dumpsterId") long dumpsterId,
                                                @Valid @RequestBody DumpsterUpdateDTO update) {
@@ -94,7 +94,7 @@ public class EcoembesFacade {
         return new ResponseEntity<>(dumpsterService.getAllDumpsters(), HttpStatus.OK);
     }
 
-    // Query the usage of a dumpster between two dates (yyyy-MM-dd)
+    // Usage of a dumpster between two dates (yyyy-MM-dd)
     @GetMapping("/dumpsters/{dumpsterId}/usage")
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
             @PathVariable("dumpsterId") long dumpsterId,
@@ -105,3 +105,6 @@ public class EcoembesFacade {
 
         if (employee.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+}
