@@ -1,99 +1,73 @@
 package es.deusto.ingenieria.sd.ecoembes.entity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-public class Dish {
+public class Employee {
 
-	private Long id;
+	private long id;
 	private String name;
-	private String ingredients;
-	private double price;
-	private List<Allergens> allergens;
+	private String email;
+	private String password;
 
-	// Default constructor is needed for Jackson to deserialize JSON
-	public Dish() {
-		this.allergens = new ArrayList<>();
-	}
-	
-	// Constructor without id for creating new dishes using POST
-	public Dish(String name, String ingredients, double price) {
-		super();
-		this.name = name;
-		this.ingredients = ingredients;
-		this.price = price;
-		this.allergens = new ArrayList<>();
-	}
+	//CONSTRUCTORS
+	public Employee() { }
 
-	// Constructor with all attributes
-	public Dish(Long id, String name, String ingredients, double price) {
-		super();
+	public Employee(long id, String name, String email, String password) {
 		this.id = id;
 		this.name = name;
-		this.ingredients = ingredients;
-		this.price = price;
-		this.allergens = new ArrayList<>();
+		this.email = email;
+		this.password = password;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getIngredients() {
-		return ingredients;
-	}
-
-	public void setIngredients(String ingredients) {
-		this.ingredients = ingredients;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	public List<Allergens> getAllergens() {
-		return allergens;
-	}
-
-	public void setAllergens(List<Allergens> allergens) {
-		this.allergens = allergens;
-	}
+	//GETTERS AND SETTERS
+	//Id
+	public long getId() { 
+		return id; 
+		}
 	
-	// Equals and HashCode methods
+	public void setId(long id) { 
+		this.id = id; 
+		}
+	
+	//Name
+	public String getName() { 
+		return name; 
+		}
+	
+	public void setName(String name) { 
+		this.name = name; 
+		}
+
+	//Email
+	public String getEmail() { 
+		return email; 
+		}
+	
+	public void setEmail(String email) { 
+		this.email = email; 
+		}
+
+	//Password
+	public String getPassword() { 
+		return password; 
+		}
+	
+	public void setPassword(String password) { 
+		this.password = password; 
+		}
+
+
+//	public boolean checkPassword(String candidate) {
+//		return password != null && password.equals(candidate);
+//	}
+
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Dish other = (Dish) obj;
-		return Objects.equals(id, other.id);
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		return id == ((Employee) obj).id;
 	}
-	
+
 	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}	
+	public int hashCode() { return Objects.hash(id); }
 }
