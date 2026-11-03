@@ -19,7 +19,7 @@ import es.deusto.sd.ingenieria. ecoembes.service.RecyclingPlantService;
 import jakarta.validation.Valid;
 
 @RestController
-public class EcoembesFacade {
+public class EcoembesAuthController {
 
     private final AuthService authService;
     private final DumpsterService dumpsterService;
@@ -36,8 +36,8 @@ public class EcoembesFacade {
 
     // Login: returns a token
     @PostMapping("/auth/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginDTO credentials) {
-        Optional<String> token = authService.login(credentials.email(), credentials.password());
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDTO credentials) {
+        Optional<String> token = authService.login(credentials.getEmail(), credentials.getPassword());
 
         if (token.isPresent()) {
             return new ResponseEntity<>(token.get(), HttpStatus.OK);
