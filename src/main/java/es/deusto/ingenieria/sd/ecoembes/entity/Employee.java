@@ -1,9 +1,4 @@
-/**
- * This code is based on solutions provided by ChatGPT 4o. 
- * It has been thoroughly reviewed and validated to ensure 
- * correctness and that it is free of errors.
- */
-package es.deusto.sd.restaurant.entity;
+package es.deusto.ingenieria.sd.ecoembes.entity;
 
 import java.util.ArrayList;
 import java.util.List;
