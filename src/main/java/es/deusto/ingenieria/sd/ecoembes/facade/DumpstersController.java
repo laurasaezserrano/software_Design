@@ -120,7 +120,7 @@ public class DumpstersController {
 	public ResponseEntity<Void> assignDumpstersToPlant(
 			@PathVariable("plantId") long plantId,
 			@RequestParam("token") String token,
-			@Valid @RequestBody DumpsterAssignmentDTO assignmentDTO) {
+			@Valid @RequestBody List<DumpsterDTO> dumpsters) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
 		if (employee.isEmpty()) {
