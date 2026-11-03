@@ -14,13 +14,24 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
+import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
+import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
+import es.deusto.ingenieria.sd.ecoembes.service.DumpsterService;
+import es.deusto.sd.ingenieria. ecoembes.service.RecyclingPlantService;
 import jakarta.validation.Valid;
 
 public class DumpstersController {
 
+	private final DumpsterService dumpsterService;
+    private final RecyclingPlantService plantService;
+    private final AssignmentService assignmentService;
 	
-	
-	
+	public DumpstersController(DumpsterService dumpsterService, RecyclingPlantService plantService, AssignmentService assignmentService) {
+		this.dumpsterService = dumpsterService;
+		this.plantService = plantService;
+		this.assignmentService = assignmentService;
+	}
 	
 	// Update dumpster info
     @PutMapping("/dumpsters/{dumpsterId}/status")
@@ -71,5 +82,58 @@ public class DumpstersController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+    
+    // Get recycling plants
+    @GetMapping("/recycling-plants")
+    public ResponseEntity<List<RecyclingPlantDTO>> getRecyclingPlants(@RequestParam("token") String token) {
+		Optional<Employee> employee = authService.getEmployeeByToken(token);
+
+		if (employee.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		return new ResponseEntity<>(plantService.getAllPlants(), HttpStatus.OK);
+	}
+    
+    // Get recycling plant capacity
+	@GetMapping("/recycling-plants/{plantId}/capacity")
+	public ResponseEntity<RecyclingPlantCapacityDTO> getRecyclingPlantCapacity(
+			@PathVariable("plantId") long plantId,
+			@RequestParam("token") String token) {
+		Optional<Employee> employee = authService.getEmployeeByToken(token);
+
+		if (employee.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		Optional<RecyclingPlantCapacityDTO> capacity = plantService.getPlantCapacity(plantId);
+
+		if (capacity.isPresent()) {
+			return new ResponseEntity<>(capacity.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	// Assign dumpsters to specified plant
+	@PostMapping("/recycling-plants/{plantId}/dumpsters")
+	public ResponseEntity<Void> assignDumpstersToPlant(
+			@PathVariable("plantId") long plantId,
+			@RequestParam("token") String token,
+			@Valid @RequestBody DumpsterAssignmentDTO assignmentDTO) {
+		Optional<Employee> employee = authService.getEmployeeByToken(token);
+
+		if (employee.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+
+		boolean success = assignmentService.assignDumpstersToPlant(plantId, assignmentDTO.getDumpsterIds());
+
+		if (success) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
     
 }
