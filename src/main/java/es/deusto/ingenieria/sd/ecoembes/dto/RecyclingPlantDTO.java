@@ -16,6 +16,12 @@ public class RecyclingPlantDTO {
 		this.capacity = capacity;
 	}
 
+	public RecyclingPlantDTO(long id, String name, String location) {
+		this.id = id;
+		this.name = name;
+		this.location = location;
+	}
+
 	public long getId() {
 		return id;
 	}

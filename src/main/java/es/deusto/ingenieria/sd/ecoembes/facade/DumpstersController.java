@@ -104,8 +104,8 @@ public class DumpstersController {
 	}
     
     // Get recycling plant capacity
-	@GetMapping("/recycling-plants/{plantId}/capacity")
-	public ResponseEntity<RecyclingPlantCapacityDTO> getRecyclingPlantCapacity(
+    @GetMapping("/recycling-plants/{plantId}/capacity")
+    public ResponseEntity<Float> getRecyclingPlantCapacity(
 			@PathVariable("plantId") long plantId,
 			@RequestParam("token") String token) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
@@ -114,7 +114,7 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		Optional<RecyclingPlantCapacityDTO> capacity = plantService.getPlantCapacity(plantId);
+		Optional<Float> capacity = plantService.getPlantCapacity(plantId);
 
 		if (capacity.isPresent()) {
 			return new ResponseEntity<>(capacity.get(), HttpStatus.OK);
@@ -122,6 +122,27 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+    
+    
+    
+//	@GetMapping("/recycling-plants/{plantId}/capacity")
+//	public ResponseEntity<RecyclingPlantCapacityDTO> getRecyclingPlantCapacity(
+//			@PathVariable("plantId") long plantId,
+//			@RequestParam("token") String token) {
+//		Optional<Employee> employee = authService.getEmployeeByToken(token);
+//
+//		if (employee.isEmpty()) {
+//			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//		}
+//
+//		Optional<RecyclingPlantCapacityDTO> capacity = plantService.getPlantCapacity(plantId);
+//
+//		if (capacity.isPresent()) {
+//			return new ResponseEntity<>(capacity.get(), HttpStatus.OK);
+//		} else {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//	}
 	
 	// Assign dumpsters to specified plant
 	@PostMapping("/recycling-plants/{plantId}/dumpsters")

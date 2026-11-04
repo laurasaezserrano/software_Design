@@ -1,8 +1,6 @@
 package es.deusto.ingenieria.sd.ecoembes.entity;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class RecyclingPlant {
@@ -65,8 +63,21 @@ public class RecyclingPlant {
 	public float getCapacity() {
 		return capacity;
 	}
+	
+	public float getCapacityByDate(LocalDate date) {
+		if (this.date.equals(date)) {
+			return capacity;
+		} else {
+			return 0;
+		}
+	}
 
 	public void setCapacity(float capacity) {
+		this.capacity = capacity;
+	}
+	
+	public void setCapacity(LocalDate date, float capacity) {
+		this.date = date;
 		this.capacity = capacity;
 	}
 
