@@ -38,6 +38,19 @@ public class AuthService {
 		loggedEmployees.put(token, employee);
 		return ResponseEntity.ok(token);
 	}
+	
+	// Login with email and password, returns a token if successful, otherwise returns null
+	public String login(String email, String password) {
+		Employee employee = employees.get(email);
+
+		if (employee == null || !employee.checkPassword(password)) {
+			return null;
+		}
+
+		String token = String.valueOf(System.currentTimeMillis());
+		loggedEmployees.put(token, employee);
+		return token;
+	}
 
 	// Removes the token and returns false if token not exist
 	

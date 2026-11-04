@@ -4,11 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import es.deusto.ingenieria.sd.ecoembes.dto.*;
+import es.deusto.ingenieria.sd.ecoembes.dto.LoginRequestDTO;
 import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import jakarta.validation.Valid;
 
@@ -17,7 +13,6 @@ import jakarta.validation.Valid;
 public class EcoembesAuthController {
 
     private final AuthService authService;
-    
 
     public EcoembesAuthController(AuthService authService) {
         this.authService = authService;
@@ -26,12 +21,10 @@ public class EcoembesAuthController {
     // Login: returns a token
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDTO credentials) {
-    	LoginRequestDTO loginCredentials = new LoginRequestDTO(credentials.getEmail(), credentials.getPassword());
-
-    	ResponseEntity<String> token = authService.login(loginCredentials);
+        String token = authService.login(credentials.getEmail(), credentials.getPassword());
 
         if (token != null) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(token, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -40,8 +33,7 @@ public class EcoembesAuthController {
     // Log out: removes the token
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestParam String token) {
-//        boolean loggedOut = authService.logout(token) != null;
-    	boolean loggedOut = authService.logout(token);
+        boolean loggedOut = authService.logout(token);
 
         if (loggedOut) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -49,6 +41,4 @@ public class EcoembesAuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
-
-    
 }

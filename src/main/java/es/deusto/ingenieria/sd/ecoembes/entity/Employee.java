@@ -70,4 +70,11 @@ public class Employee {
 
 	@Override
 	public int hashCode() { return Objects.hash(id); }
+
+	public boolean checkPassword(String pass) {
+		if (this.password == null || pass == null) {
+			return false;
+		}
+		return true;
+	}
 }
