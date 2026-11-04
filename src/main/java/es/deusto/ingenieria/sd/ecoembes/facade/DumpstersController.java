@@ -28,6 +28,8 @@ public class DumpstersController {
 	private final DumpsterService dumpsterService;
     private final RecyclingPlantService plantService;
     private final AssignmentService assignmentService;
+    private final AuthService  authService;
+
 	
 	public DumpstersController(DumpsterService dumpsterService, RecyclingPlantService plantService, AssignmentService assignmentService) {
 		this.dumpsterService = dumpsterService;
