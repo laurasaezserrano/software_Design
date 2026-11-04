@@ -34,10 +34,10 @@ public class EcoembesAuthController {
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDTO credentials) {
     	LoginRequestDTO loginCredentials = new LoginRequestDTO(credentials.getEmail(), credentials.getPassword());
 
-        Optional<String> token = authService.login(loginCredentials);
+    	ResponseEntity<String> token = authService.login(loginCredentials);
 
-        if (token.isPresent()) {
-            return new ResponseEntity<>(token.get(), HttpStatus.OK);
+        if (token != null) {
+            return new ResponseEntity<>(token.getToken(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -46,7 +46,7 @@ public class EcoembesAuthController {
     // Log out: removes the token
     @PostMapping("/auth/logout")
     public ResponseEntity<Void> logout(@RequestParam String token) {
-        boolean loggedOut = authService.logout(token);
+        boolean loggedOut = authService.logout(token) != null;
 
         if (loggedOut) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

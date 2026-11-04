@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
+import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
 import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
@@ -54,14 +55,14 @@ public class DumpstersController {
     // Create a new dumpster
     @PostMapping("/dumpsters")
     public ResponseEntity<DumpsterDTO> createDumpster(@RequestParam String token,
-                                                      @Valid @RequestBody DumpsterCreationDTO dto) {
+                                                      @Valid @RequestBody FillLevel fillLevel, int numContainers, DumpsterDTO dto, Dumpster d) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
 
         if (employee.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        DumpsterDTO newDumpster = dumpsterService.createDumpster(dto);
+        DumpsterDTO newDumpster = dumpsterService.createDumpster(fillLevel, numContainers, dto, d);
 
         return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
     }
