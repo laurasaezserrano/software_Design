@@ -1,17 +1,11 @@
 package es.deusto.ingenieria.sd.ecoembes.facade;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.deusto.ingenieria.sd.ecoembes.dto.*;
@@ -19,6 +13,7 @@ import es.deusto.ingenieria.sd.ecoembes.dto.*;
 
 import jakarta.validation.Valid;
 
+@RequestMapping("/auth")
 @RestController
 public class EcoembesAuthController {
 
@@ -30,21 +25,21 @@ public class EcoembesAuthController {
     }
 
     // Login: returns a token
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDTO credentials) {
     	LoginRequestDTO loginCredentials = new LoginRequestDTO(credentials.getEmail(), credentials.getPassword());
 
     	ResponseEntity<String> token = authService.login(loginCredentials);
 
         if (token != null) {
-            return new ResponseEntity<>(token.getToken(), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     // Log out: removes the token
-    @PostMapping("/auth/logout")
+    @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestParam String token) {
         boolean loggedOut = authService.logout(token) != null;
 

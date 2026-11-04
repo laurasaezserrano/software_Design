@@ -117,4 +117,12 @@ public class Dumpster {
 
 	@Override
 	public int hashCode() { return Objects.hash(id); }
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

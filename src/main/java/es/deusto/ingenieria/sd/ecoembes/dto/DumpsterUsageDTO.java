@@ -18,11 +18,11 @@ public class DumpsterUsageDTO {
 		this.fillLevel = fillLevel;
 	}
 
-	public String getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
