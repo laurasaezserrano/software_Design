@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 //import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
@@ -80,17 +81,17 @@ public class DumpsterService {
 	}
 
 	// Usage of a dumpster between two dates
-	public Optional<List<DumpsterUsageDTO>> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
+	public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
 		Dumpster dumpster = findDumpster(id);
 		if (dumpster == null) {
-			return Optional.empty();
+			return ResponseEntity.notFound().build();
 		}
 
 		List<DumpsterUsageDTO> result = new ArrayList<>();
 		for (DumpsterUsage usage : dumpster.getUsageBetween(start, end)) {
 			result.add(new DumpsterUsageDTO(usage.getDate(), usage.getContainers(), usage.getFillLevel()));
 		}
-		return Optional.of(result);
+		return ResponseEntity.ok(result);
 	}
 
 	// Returns the dumpster with that id, or null if it does not exist

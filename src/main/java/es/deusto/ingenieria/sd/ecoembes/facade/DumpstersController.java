@@ -92,7 +92,7 @@ public class DumpstersController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         
-        return new ResponseEntity<List<DumpsterUsageDTO>>(dumpsterService.getDumpsterUsage(dumpsterId, startDate, endDate), HttpStatus.OK);
+        return new ResponseEntity<List<DumpsterUsageDTO>>(HttpStatus.OK);
     }
     
     // Get recycling plants
@@ -139,7 +139,10 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		boolean success = assignmentService.assignDumpstersToPlant(plantId, assignmentDTO.getDumpsterIds());
+		List<Long> dumpsterIds = dumpsters.stream().map(DumpsterDTO::getId).toList();
+		
+		boolean success = assignmentService.assignDumpstersToPlant(plantId, dumpsterIds, employee.get());
+
 
 		if (success) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
