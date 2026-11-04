@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
+import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
@@ -41,7 +42,7 @@ public class DumpstersController {
 	
 	// Update dumpster info by defining num of containers and fill level
     @PutMapping("/dumpsters/{dumpsterId}/status")
-    public ResponseEntity<Void> updateDumpster(@PathVariable("dumpsterId") long dumpsterId,
+    public ResponseEntity<Void> updateDumpster(@PathVariable long dumpsterId,
     		@RequestBody FillLevel fillLevel,
     		@RequestBody int numContainers) {
 		dumpsterService.updateDumpster(dumpsterId, fillLevel, numContainers);
@@ -52,7 +53,7 @@ public class DumpstersController {
 
     // Create a new dumpster
     @PostMapping("/dumpsters")
-    public ResponseEntity<DumpsterDTO> createDumpster(@RequestParam("token") String token,
+    public ResponseEntity<DumpsterDTO> createDumpster(@RequestParam String token,
                                                       @Valid @RequestBody DumpsterCreationDTO dto) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
 
@@ -67,7 +68,7 @@ public class DumpstersController {
 
     // Get all dumpsters
     @GetMapping("/dumpsters")
-    public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(@RequestParam("token") String token) {
+    public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(@RequestParam String token) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
 
         if (employee.isEmpty()) {
@@ -80,20 +81,22 @@ public class DumpstersController {
     // Usage of a dumpster between two dates (yyyy-MM-dd)
     @GetMapping("/dumpsters/{dumpsterId}/usage")
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
-            @PathVariable("dumpsterId") long dumpsterId,
-            @RequestParam("token") String token,
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @PathVariable long dumpsterId,
+            @RequestParam String token,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
 
         if (employee.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        
+        return new ResponseEntity<List<DumpsterUsageDTO>>(dumpsterService.getDumpsterUsage(dumpsterId, startDate, endDate), HttpStatus.OK);
     }
     
     // Get recycling plants
     @GetMapping("/recycling-plants")
-    public ResponseEntity<List<RecyclingPlantDTO>> getRecyclingPlants(@RequestParam("token") String token) {
+    public ResponseEntity<List<RecyclingPlantDTO>> getRecyclingPlants(@RequestParam String token) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
 		if (employee.isEmpty()) {
@@ -106,49 +109,28 @@ public class DumpstersController {
     // Get recycling plant capacity
     @GetMapping("/recycling-plants/{plantId}/capacity")
     public ResponseEntity<Float> getRecyclingPlantCapacity(
-			@PathVariable("plantId") long plantId,
-			@RequestParam("token") String token) {
+			@PathVariable long plantId,
+			@RequestParam String token) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
 		if (employee.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		Optional<Float> capacity = plantService.getPlantCapacity(plantId);
+		float capacity = plantService.getPlantCapacity(plantId);
 
-		if (capacity.isPresent()) {
-			return new ResponseEntity<>(capacity.get(), HttpStatus.OK);
+		if (capacity >= 0) {
+			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
     
-    
-    
-//	@GetMapping("/recycling-plants/{plantId}/capacity")
-//	public ResponseEntity<RecyclingPlantCapacityDTO> getRecyclingPlantCapacity(
-//			@PathVariable("plantId") long plantId,
-//			@RequestParam("token") String token) {
-//		Optional<Employee> employee = authService.getEmployeeByToken(token);
-//
-//		if (employee.isEmpty()) {
-//			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//		}
-//
-//		Optional<RecyclingPlantCapacityDTO> capacity = plantService.getPlantCapacity(plantId);
-//
-//		if (capacity.isPresent()) {
-//			return new ResponseEntity<>(capacity.get(), HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}
-//	}
-	
 	// Assign dumpsters to specified plant
 	@PostMapping("/recycling-plants/{plantId}/dumpsters")
 	public ResponseEntity<Void> assignDumpstersToPlant(
-			@PathVariable("plantId") long plantId,
-			@RequestParam("token") String token,
+			@PathVariable long plantId,
+			@RequestParam String token,
 			@Valid @RequestBody List<DumpsterDTO> dumpsters) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 

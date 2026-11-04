@@ -45,7 +45,7 @@ public class EcoembesAuthController {
 
     // Log out: removes the token
     @PostMapping("/auth/logout")
-    public ResponseEntity<Void> logout(@RequestParam("token") String token) {
+    public ResponseEntity<Void> logout(@RequestParam String token) {
         boolean loggedOut = authService.logout(token);
 
         if (loggedOut) {

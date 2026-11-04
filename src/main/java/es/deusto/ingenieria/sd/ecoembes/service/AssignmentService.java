@@ -15,7 +15,7 @@ import es.deusto.ingenieria.sd.ecoembes.entity.RecyclingPlant;
 public class AssignmentService {
 
 	// Simulation: we suppose that each container weighs 0.1 tons
-	private static final double TONS_PER_CONTAINER = 0.1;
+	private static final float TONS_PER_CONTAINER = 0.1f;
 
 	private DumpsterService dumpsterService;
 	private RecyclingPlantService plantService;
@@ -51,11 +51,11 @@ public class AssignmentService {
 
 		// Check that there is enough capacity today
 		LocalDate today = LocalDate.now();
-		Double capacity = plant.getCapacity(today);
+		float capacity = plant.getCapacityByDate(today);
 		Assignment assignment = new Assignment(nextId, today, plant, employee, selected);
-		double neededTons = assignment.getTotalContainers() * TONS_PER_CONTAINER;
+		float neededTons = assignment.getTotalContainers() * TONS_PER_CONTAINER;
 
-		if (capacity == null || neededTons > capacity) {
+		if (capacity == 0 || neededTons > capacity) {
 			return false;
 		}
 
