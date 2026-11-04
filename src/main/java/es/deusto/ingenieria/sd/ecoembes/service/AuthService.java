@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import es.deusto.ingenieria.sd.ecoembes.dto.LoginRequestDTO;
@@ -22,11 +23,11 @@ public class AuthService {
 	}
 
 	// Returns the token when the credentials correct
-	public Optional<String> login(LoginRequestDTO credentials) {
+	public ResponseEntity<String> login(LoginRequestDTO credentials) {
 		Employee employee = employees.get(credentials.getEmail());
 
 		if (employee == null) {
-			return Optional.empty();
+			return ResponseEntity.status(401).body("Invalid credentials");
 		}
 		
 //		if (!employee.checkPassword(credentials.getPassword())) {
@@ -35,7 +36,7 @@ public class AuthService {
 
 		String token = String.valueOf(System.currentTimeMillis());
 		loggedEmployees.put(token, employee);
-		return Optional.of(token);
+		return ResponseEntity.ok(token);
 	}
 
 	// Removes the token and returns false if token not exist

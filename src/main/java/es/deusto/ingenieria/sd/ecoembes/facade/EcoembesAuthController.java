@@ -9,18 +9,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.deusto.ingenieria.sd.ecoembes.dto.*;
-
-
+import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import jakarta.validation.Valid;
 
 @RequestMapping("/auth")
 @RestController
 public class EcoembesAuthController {
 
-    private final EcoembesAuthController authService;
+    private final AuthService authService;
     
 
-    public EcoembesAuthController(EcoembesAuthController authService) {
+    public EcoembesAuthController(AuthService authService) {
         this.authService = authService;
     }
 
@@ -41,7 +40,8 @@ public class EcoembesAuthController {
     // Log out: removes the token
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestParam String token) {
-        boolean loggedOut = authService.logout(token) != null;
+//        boolean loggedOut = authService.logout(token) != null;
+    	boolean loggedOut = authService.logout(token);
 
         if (loggedOut) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
