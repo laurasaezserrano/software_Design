@@ -18,8 +18,10 @@ public class AuthService {
 	private Map<String, Employee> loggedEmployees = new HashMap<>();
 
 	public AuthService() {
-		employees.put("ana@ecoembes.com", new Employee(1, "Ana", "ana@ecoembes.com", "1234"));
-		employees.put("luis@ecoembes.com", new Employee(2, "Luis", "luis@ecoembes.com", "1234"));
+		employees.put("laura@gmail.com", new Employee(1, "Laura", "laura@gmail.com", "1234"));
+		employees.put("carmen@gmail.com", new Employee(2, "Carmen", "carmen@gmail.com", "1234"));
+		employees.put("carmen@gmail.com", new Employee(2, "Carmen", "carmen@gmail.com", "1234"));
+		employees.put("carmen@gmail.com", new Employee(2, "Carmen", "carmen@gmail.com", "1234"));
 	}
 
 	// Returns the token when the credentials correct
