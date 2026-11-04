@@ -1,17 +1,19 @@
 package es.deusto.ingenieria.sd.ecoembes.dto;
 
 public class RecyclingPlantDTO {
-		private long id;
+	private long id;
 	private String name;
 	private String location;
+	private float capacity;
 
 	public RecyclingPlantDTO() {
 	}
 
-	public RecyclingPlantDTO(long id, String name, String location) {
+	public RecyclingPlantDTO(long id, String name, String location, float capacity) {
 		this.id = id;
 		this.name = name;
 		this.location = location;
+		this.capacity = capacity;
 	}
 
 	public long getId() {
@@ -36,6 +38,14 @@ public class RecyclingPlantDTO {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public float getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(float capacity) {
+		this.capacity = capacity;
 	}
 
 }

@@ -10,66 +10,47 @@ public class RecyclingPlant {
 	private long id;
 	private String name;
 	private String location;
-	private Map<LocalDate, Double> capacityByDate; // tons
+	private float capacity;
+	private LocalDate date;
 
-	//CONSTRUCTORS
-	public RecyclingPlant() {
-		this.capacityByDate = new HashMap<>();
+	public RecyclingPlant(long id, String name, String location, float capacity, LocalDate date) {
+		this.id = id;
+		this.name = name;
+		this.location = location;
+		this.setCapacity(capacity);
+		this.setDate(LocalDate.now());
 	}
 
 	public RecyclingPlant(long id, String name, String location) {
-		this();
 		this.id = id;
 		this.name = name;
 		this.location = location;
 	}
 
-	//GETTERS AND SETTERS
-	//Id
 	public long getId() { 
 		return id; 
-		}
+	}
 	
 	public void setId(long id) { 
 		this.id = id; 
-		}
+	}
 
-	//Name
 	public String getName() { 
 		return name; 
-		}
+	}
 	
 	public void setName(String name) { 
 		this.name = name; 
-		}
+	}
 
-	//Location
 	public String getLocation() { 
 		return location; 
-		}
+	}
 	
 	public void setLocation(String location) { 
 		this.location = location; 
-		}
-
-	//Capacity by date
-	public Map<LocalDate, Double> getCapacityByDate() { 
-		return capacityByDate; 
-		}
-	
-	public void setCapacityByDate(Map<LocalDate, Double> capacityByDate) {
-		this.capacityByDate = capacityByDate != null ? capacityByDate : new HashMap<>();
 	}
 
-	//Capacity for a given date
-	public void setCapacity(LocalDate date, double tons) { 
-		capacityByDate.put(date, tons); 
-		}
-
-	
-	public Double getCapacity(LocalDate date) { 
-		return capacityByDate.get(date); 
-		}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -80,4 +61,20 @@ public class RecyclingPlant {
 
 	@Override
 	public int hashCode() { return Objects.hash(id); }
+
+	public float getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(float capacity) {
+		this.capacity = capacity;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
 }
