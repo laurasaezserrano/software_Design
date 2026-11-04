@@ -1,9 +1,15 @@
 package es.deusto.ingenieria.sd.ecoembes.dto;
 
+import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
+
 public class DumpsterDTO {
-		private long id;
+	private long id;
 	private String location;
 	private String status;
+	private String postalCode;
+	private int capacity;
+	private int numContainers;
+	private FillLevel fillLevel;
 
 	public DumpsterDTO() {
 	}
@@ -36,6 +42,38 @@ public class DumpsterDTO {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public String getPostalCode() {
+		return postalCode;
+	}
+	
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+	
+	public int getCapacity() {
+		return capacity;
+	}
+	
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+	
+	public int getNumContainers() {
+		return numContainers;
+	}
+	
+	public void setNumContainers(int numContainers) {
+		this.numContainers = numContainers;
+	}
+	
+	public FillLevel getFillLevel() {
+		return fillLevel;
+	}
+	
+	public void setFillLevel(FillLevel fillLevel) {
+		this.fillLevel = fillLevel;
 	}
 
 }

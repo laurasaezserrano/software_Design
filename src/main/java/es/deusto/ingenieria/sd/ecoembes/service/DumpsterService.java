@@ -36,8 +36,8 @@ public class DumpsterService {
 		nextId++;
 	}
 
-	public DumpsterDTO createDumpster(DumpsterCreationDTO dto) {
-		Dumpster dumpster = new Dumpster(nextId, dto.getLocation(), dto.getPostalCode(), dto.getCapacity());
+	public DumpsterDTO createDumpster(FillLevel fillLevel, int numContainers, DumpsterDTO dto, Dumpster d) {
+		Dumpster dumpster = new Dumpster(nextId, dto.getLocation(), d.getPostalCode(), d.getCapacity());
 		dumpsters.add(dumpster);
 		nextId++;
 
@@ -45,7 +45,7 @@ public class DumpsterService {
 	}
 
 	// Update from the sensor. Returns false if the dumpster does not exist or the status is not valid
-	public boolean updateDumpster(long id, DumpsterUpdateDTO update) {
+	public boolean updateDumpster(long id, DumpsterDTO dto) {
 		Dumpster dumpster = findDumpster(id);
 		if (dumpster == null) {
 			return false;
@@ -53,12 +53,12 @@ public class DumpsterService {
 
 		FillLevel level;
 		try {
-			level = FillLevel.valueOf(update.getStatus().toUpperCase());
+			level = FillLevel.valueOf(dto.getStatus().toUpperCase());
 		} catch (IllegalArgumentException e) {
 			return false;
 		}
 
-		dumpster.update(LocalDate.now(), update.getContainers(), level);
+		dumpster.update(LocalDate.now(), dto.getNumContainers(), level);
 		return true;
 	}
 

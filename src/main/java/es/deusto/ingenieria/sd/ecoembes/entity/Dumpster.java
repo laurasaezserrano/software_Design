@@ -10,6 +10,7 @@ public class Dumpster {
 	private long id;
 	private String location;     
 	private String postalCode;
+	private String status;
 	private int capacity;         
 	private int containers;      
 	private FillLevel fillLevel;

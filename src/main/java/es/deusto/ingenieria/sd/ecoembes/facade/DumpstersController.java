@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
+import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
 import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
 import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import es.deusto.ingenieria.sd.ecoembes.service.DumpsterService;
-import es.deusto.sd.ingenieria. ecoembes.service.RecyclingPlantService;
+import es.deusto.ingenieria.sd.ecoembes.service.RecyclingPlantService;
 import jakarta.validation.Valid;
 
 public class DumpstersController {
@@ -28,22 +29,25 @@ public class DumpstersController {
 	private final DumpsterService dumpsterService;
     private final RecyclingPlantService plantService;
     private final AssignmentService assignmentService;
-    private final AuthService  authService;
+    private final AuthService authService;
 
 	
-	public DumpstersController(DumpsterService dumpsterService, RecyclingPlantService plantService, AssignmentService assignmentService) {
+	public DumpstersController(DumpsterService dumpsterService, RecyclingPlantService plantService, AssignmentService assignmentService, AuthService authService) {
 		this.dumpsterService = dumpsterService;
 		this.plantService = plantService;
 		this.assignmentService = assignmentService;
+		this.authService = authService;
 	}
 	
-	// Update dumpster info
+	// Update dumpster info by defining num of containers and fill level
     @PutMapping("/dumpsters/{dumpsterId}/status")
     public ResponseEntity<Void> updateDumpster(@PathVariable("dumpsterId") long dumpsterId,
-                                               @Valid @RequestBody DumpsterUpdateDTO update) {
-        dumpsterService.updateDumpster(dumpsterId, update);
+    		@RequestBody FillLevel fillLevel,
+    		@RequestBody int numContainers) {
+		dumpsterService.updateDumpster(dumpsterId, fillLevel, numContainers);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
     }
 
     // Create a new dumpster
