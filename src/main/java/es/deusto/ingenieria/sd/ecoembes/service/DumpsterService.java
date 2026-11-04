@@ -7,9 +7,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
+//import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
-import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUpdateDTO;
+//import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUpdateDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
 import es.deusto.ingenieria.sd.ecoembes.entity.DumpsterUsage;
@@ -69,6 +69,15 @@ public class DumpsterService {
 		}
 		return result;
 	}
+	
+	public boolean updateDumpster(long dumpsterId, FillLevel fillLevel, int numContainers) {
+		Dumpster dumpster = findDumpster(dumpsterId);
+		if (dumpster == null) {
+			return false;
+		}
+		dumpster.update(LocalDate.now(), numContainers, fillLevel);
+		return true;
+	}
 
 	// Usage of a dumpster between two dates
 	public Optional<List<DumpsterUsageDTO>> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
@@ -79,7 +88,7 @@ public class DumpsterService {
 
 		List<DumpsterUsageDTO> result = new ArrayList<>();
 		for (DumpsterUsage usage : dumpster.getUsageBetween(start, end)) {
-			result.add(new DumpsterUsageDTO(usage.getDate(), usage.getContainers(), usage.getFillLevel().name()));
+			result.add(new DumpsterUsageDTO(usage.getDate(), usage.getContainers(), usage.getFillLevel()));
 		}
 		return Optional.of(result);
 	}
@@ -97,4 +106,6 @@ public class DumpsterService {
 	private DumpsterDTO toDTO(Dumpster dumpster) {
 		return new DumpsterDTO(dumpster.getId(), dumpster.getLocation(), dumpster.getFillLevel().name());
 	}
+
+	
 }

@@ -1,16 +1,18 @@
 package es.deusto.ingenieria.sd.ecoembes.dto;
 
+import java.time.LocalDate;
+
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
 
 public class DumpsterUsageDTO {
-	private String date;
+	private LocalDate date;
 	private int numContainers;
 	private FillLevel fillLevel;
 
 	public DumpsterUsageDTO() {
 	}
 
-	public DumpsterUsageDTO(String date, int numContainers, FillLevel fillLevel) {
+	public DumpsterUsageDTO(LocalDate date, int numContainers, FillLevel fillLevel) {
 		this.date = date;
 		this.numContainers = numContainers;
 		this.fillLevel = fillLevel;
