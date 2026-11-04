@@ -2,7 +2,6 @@ package es.deusto.ingenieria.sd.ecoembes.entity;
 
 import java.time.LocalDate;
 
-//Reads daily the usage of a dumpster (sensor)
 public class DumpsterUsage {
 
 	private LocalDate date;

@@ -5,6 +5,7 @@ public class LoginRequestDTO {
     private String email;
     private String password;
 
+    //CONSTRUCTOR
     public LoginRequestDTO() {
     }
 
@@ -13,6 +14,8 @@ public class LoginRequestDTO {
         this.password = password;
     }
 
+    //GETTERS AND SETTERS
+    //Email
     public String getEmail() {
         return email;
     }
@@ -21,6 +24,7 @@ public class LoginRequestDTO {
         this.email = email;
     }
 
+    //Password
     public String getPassword() {
         return password;
     }

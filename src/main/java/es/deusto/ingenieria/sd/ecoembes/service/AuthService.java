@@ -20,8 +20,8 @@ public class AuthService {
 	public AuthService() {
 		employees.put("laura@gmail.com", new Employee(1, "Laura", "laura@gmail.com", "1234"));
 		employees.put("carmen@gmail.com", new Employee(2, "Carmen", "carmen@gmail.com", "1234"));
-		employees.put("carmen@gmail.com", new Employee(2, "Carmen", "carmen@gmail.com", "1234"));
-		employees.put("carmen@gmail.com", new Employee(2, "Carmen", "carmen@gmail.com", "1234"));
+		employees.put("zaira@gmail.com", new Employee(3, "Zaira", "zaira@gmail.com", "1234"));
+		employees.put("jan@gmail.com", new Employee(4, "Jan", "jan@gmail.com", "1234"));
 	}
 
 	// Returns the token when the credentials ==  correct

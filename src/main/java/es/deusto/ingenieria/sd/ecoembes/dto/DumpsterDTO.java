@@ -11,6 +11,7 @@ public class DumpsterDTO {
 	private int numContainers;
 	private FillLevel fillLevel;
 
+	//CONSTRUCTORS
 	public DumpsterDTO() {
 	}
 
@@ -20,6 +21,8 @@ public class DumpsterDTO {
 		this.status = status;
 	}
 
+	//GETTERS AND SETTERS
+	//Id
 	public long getId() {
 		return id;
 	}
@@ -28,6 +31,7 @@ public class DumpsterDTO {
 		this.id = id;
 	}
 
+	//Location
 	public String getLocation() {
 		return location;
 	}
@@ -44,6 +48,7 @@ public class DumpsterDTO {
 		this.status = status;
 	}
 	
+	//PostalCode
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -52,6 +57,7 @@ public class DumpsterDTO {
 		this.postalCode = postalCode;
 	}
 	
+	//Capacity
 	public int getCapacity() {
 		return capacity;
 	}
@@ -60,6 +66,7 @@ public class DumpsterDTO {
 		this.capacity = capacity;
 	}
 	
+	//NumContainers
 	public int getNumContainers() {
 		return numContainers;
 	}
@@ -68,6 +75,7 @@ public class DumpsterDTO {
 		this.numContainers = numContainers;
 	}
 	
+	//FillLevel
 	public FillLevel getFillLevel() {
 		return fillLevel;
 	}
@@ -75,5 +83,5 @@ public class DumpsterDTO {
 	public void setFillLevel(FillLevel fillLevel) {
 		this.fillLevel = fillLevel;
 	}
-
+	
 }

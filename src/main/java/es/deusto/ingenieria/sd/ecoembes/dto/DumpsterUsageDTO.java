@@ -9,6 +9,7 @@ public class DumpsterUsageDTO {
 	private int numContainers;
 	private FillLevel fillLevel;
 
+	//CONSTRUCTORS
 	public DumpsterUsageDTO() {
 	}
 
@@ -18,6 +19,8 @@ public class DumpsterUsageDTO {
 		this.fillLevel = fillLevel;
 	}
 
+	//GETTERS AND SETTERS
+	//Date
 	public LocalDate getDate() {
 		return date;
 	}
@@ -26,6 +29,7 @@ public class DumpsterUsageDTO {
 		this.date = date;
 	}
 
+	//Containers
 	public int getContainers() {
 		return numContainers;
 	}
@@ -34,6 +38,7 @@ public class DumpsterUsageDTO {
 		this.numContainers = numContainers;
 	}
 
+	//Fill Level
 	public FillLevel getFillLevel() {
 		return fillLevel;
 	}

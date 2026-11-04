@@ -18,12 +18,12 @@ import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
 @Service
 public class DumpsterService {
 
-	// There is no database yet, so dumpsters are stored in a list
 	private List<Dumpster> dumpsters = new ArrayList<>();
 	private long nextId = 1;
 
 	public DumpsterService() {
-		// Example data
+		
+		// Examples provided by CLAUDE
 		createExample("Gran Via 1, Bilbao", "48001", 10, 3, FillLevel.GREEN);
 		createExample("Calle Mayor 5, Bilbao", "48001", 10, 7, FillLevel.ORANGE);
 		createExample("Avenida Sabino Arana 10, Bilbao", "48013", 12, 12, FillLevel.RED);

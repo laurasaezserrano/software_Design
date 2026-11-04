@@ -56,11 +56,6 @@ public class Employee {
 		this.password = password; 
 		}
 
-
-//	public boolean checkPassword(String candidate) {
-//		return password != null && password.equals(candidate);
-//	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;

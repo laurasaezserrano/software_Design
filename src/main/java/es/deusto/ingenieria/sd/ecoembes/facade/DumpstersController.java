@@ -41,7 +41,6 @@ public class DumpstersController {
 		this.authService = authService;
 	}
 	
-	// Update dumpster info by defining num of containers and fill level
     @PutMapping("/dumpsters/{dumpsterId}/status")
     public ResponseEntity<Void> updateDumpster(@PathVariable long dumpsterId,
     		@RequestBody FillLevel fillLevel,

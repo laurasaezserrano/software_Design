@@ -14,7 +14,7 @@ import es.deusto.ingenieria.sd.ecoembes.entity.RecyclingPlant;
 @Service
 public class AssignmentService {
 
-	// Simulation: we suppose that each container weighs 0.1 tons
+	// Simulation:Suppose that each weighs 0.1 tons (Claude idea for the simulation)
 	private static final float TONS_PER_CONTAINER = 0.1f;
 
 	private DumpsterService dumpsterService;
@@ -28,8 +28,6 @@ public class AssignmentService {
 		this.plantService = plantService;
 	}
 
-	// Returns true if the assignment is done. Returns false if the plant or a dumpster
-	// does not exist, or if the plant does not have enough capacity
 	public boolean assignDumpstersToPlant(long plantId, List<Long> dumpsterIds, Employee employee) {
 		RecyclingPlant plant = plantService.findPlant(plantId);
 		if (plant == null) {
@@ -39,7 +37,6 @@ public class AssignmentService {
 			return false;
 		}
 
-		// Look for all the dumpsters
 		List<Dumpster> selected = new ArrayList<>();
 		for (Long id : dumpsterIds) {
 			Dumpster dumpster = dumpsterService.findDumpster(id);
@@ -49,7 +46,6 @@ public class AssignmentService {
 			selected.add(dumpster);
 		}
 
-		// Check that there is enough capacity today
 		LocalDate today = LocalDate.now();
 		float capacity = plant.getCapacityByDate(today);
 		Assignment assignment = new Assignment(nextId, today, plant, employee, selected);
@@ -59,12 +55,10 @@ public class AssignmentService {
 			return false;
 		}
 
-		// Save the assignment and reduce the capacity of the plant
 		plant.setCapacity(today, capacity - neededTons);
 		assignments.add(assignment);
 		nextId++;
 
-		// Simulated notification to the plant
 		System.out.println("Notification to " + plant.getName() + ": " + assignment.getTotalDumpsters()
 				+ " dumpsters and " + assignment.getTotalContainers() + " containers. Assigned by "
 				+ employee.getEmail());

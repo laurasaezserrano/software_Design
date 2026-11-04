@@ -4,6 +4,7 @@ public class LoginResponseDTO {
 
     private String token;
 
+    //CONSTRUCTOR
     public LoginResponseDTO() {
     }
 
@@ -11,6 +12,8 @@ public class LoginResponseDTO {
         this.token = token;
     }
 
+    //GETTERS AND SETTERS
+    //Token
     public String getToken() {
         return token;
     }

@@ -6,6 +6,7 @@ public class RecyclingPlantDTO {
 	private String location;
 	private float capacity;
 
+	//CONSTRUCTORS
 	public RecyclingPlantDTO() {
 	}
 
@@ -22,6 +23,8 @@ public class RecyclingPlantDTO {
 		this.location = location;
 	}
 
+	//GETTERS AND SETTERS
+	//Id
 	public long getId() {
 		return id;
 	}
@@ -30,6 +33,7 @@ public class RecyclingPlantDTO {
 		this.id = id;
 	}
 
+	//Name
 	public String getName() {
 		return name;
 	}
@@ -38,6 +42,7 @@ public class RecyclingPlantDTO {
 		this.name = name;
 	}
 
+	//Location
 	public String getLocation() {
 		return location;
 	}
@@ -46,6 +51,7 @@ public class RecyclingPlantDTO {
 		this.location = location;
 	}
 
+	//Capacity
 	public float getCapacity() {
 		return capacity;
 	}
