@@ -24,24 +24,20 @@ public class AuthService {
 		employees.put("carmen@gmail.com", new Employee(2, "Carmen", "carmen@gmail.com", "1234"));
 	}
 
-	// Returns the token when the credentials correct
+	// Returns the token when the credentials ==  correct
 	public ResponseEntity<String> login(LoginRequestDTO credentials) {
 		Employee employee = employees.get(credentials.getEmail());
 
 		if (employee == null) {
+			//if user not found or password incorrect
 			return ResponseEntity.status(401).body("Invalid credentials");
 		}
-		
-//		if (!employee.checkPassword(credentials.getPassword())) {
-//			return Optional.empty();
-//		}
 
 		String token = String.valueOf(System.currentTimeMillis());
 		loggedEmployees.put(token, employee);
 		return ResponseEntity.ok(token);
 	}
 	
-	// Login with email and password, returns a token if successful, otherwise returns null
 	public String login(String email, String password) {
 		Employee employee = employees.get(email);
 
@@ -54,8 +50,6 @@ public class AuthService {
 		return token;
 	}
 
-	// Removes the token and returns false if token not exist
-	
 	public boolean logout(String token) {
 		if (loggedEmployees.containsKey(token)) {
 			loggedEmployees.remove(token);

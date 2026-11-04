@@ -18,7 +18,6 @@ public class EcoembesAuthController {
         this.authService = authService;
     }
 
-    // Login: returns a token
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDTO credentials) {
         String token = authService.login(credentials.getEmail(), credentials.getPassword());
@@ -30,7 +29,6 @@ public class EcoembesAuthController {
         }
     }
 
-    // Log out: removes the token
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestParam String token) {
         boolean loggedOut = authService.logout(token);

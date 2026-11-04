@@ -44,7 +44,6 @@ public class DumpsterService {
 		return toDTO(dumpster);
 	}
 
-	// Update from the sensor. Returns false if the dumpster does not exist or the status is not valid
 	public boolean updateDumpster(long id, DumpsterDTO dto) {
 		Dumpster dumpster = findDumpster(id);
 		if (dumpster == null) {
@@ -93,7 +92,6 @@ public class DumpsterService {
 		return ResponseEntity.ok(result);
 	}
 
-	// Returns the dumpster with that id, or null if it does not exist
 	public Dumpster findDumpster(long id) {
 		for (Dumpster dumpster : dumpsters) {
 			if (dumpster.getId() == id) {
@@ -106,6 +104,4 @@ public class DumpsterService {
 	private DumpsterDTO toDTO(Dumpster dumpster) {
 		return new DumpsterDTO(dumpster.getId(), dumpster.getLocation(), dumpster.getFillLevel().name());
 	}
-
-	
 }

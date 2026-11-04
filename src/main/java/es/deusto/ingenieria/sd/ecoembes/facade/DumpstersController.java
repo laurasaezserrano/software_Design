@@ -52,7 +52,6 @@ public class DumpstersController {
 		
     }
 
-    // Create a new dumpster
     @PostMapping("/dumpsters")
     public ResponseEntity<DumpsterDTO> createDumpster(@RequestParam String token,
                                                       @Valid @RequestBody FillLevel fillLevel, int numContainers, DumpsterDTO dto, Dumpster d) {
@@ -67,7 +66,6 @@ public class DumpstersController {
         return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
     }
 
-    // Get all dumpsters
     @GetMapping("/dumpsters")
     public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(@RequestParam String token) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
@@ -79,7 +77,6 @@ public class DumpstersController {
         return new ResponseEntity<>(dumpsterService.getAllDumpsters(), HttpStatus.OK);
     }
 
-    // Usage of a dumpster between two dates (yyyy-MM-dd)
     @GetMapping("/dumpsters/{dumpsterId}/usage")
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
             @PathVariable long dumpsterId,
@@ -95,7 +92,6 @@ public class DumpstersController {
         return new ResponseEntity<List<DumpsterUsageDTO>>(HttpStatus.OK);
     }
     
-    // Get recycling plants
     @GetMapping("/recycling-plants")
     public ResponseEntity<List<RecyclingPlantDTO>> getRecyclingPlants(@RequestParam String token) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
@@ -107,7 +103,6 @@ public class DumpstersController {
 		return new ResponseEntity<>(plantService.getAllPlants(), HttpStatus.OK);
 	}
     
-    // Get recycling plant capacity
     @GetMapping("/recycling-plants/{plantId}/capacity")
     public ResponseEntity<Float> getRecyclingPlantCapacity(
 			@PathVariable long plantId,
@@ -127,7 +122,6 @@ public class DumpstersController {
 		}
 	}
     
-	// Assign dumpsters to specified plant
 	@PostMapping("/recycling-plants/{plantId}/dumpsters")
 	public ResponseEntity<Void> assignDumpstersToPlant(
 			@PathVariable long plantId,
