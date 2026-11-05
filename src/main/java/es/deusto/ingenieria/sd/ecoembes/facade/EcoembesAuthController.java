@@ -57,7 +57,7 @@ public class EcoembesAuthController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
     		@Parameter(name="token", description = "Authentication token of the employee", required = true)
-    		@RequestParam String token) {
+    		@RequestParam("token") String token) {
     	
         boolean loggedOut = authService.logout(token);
 

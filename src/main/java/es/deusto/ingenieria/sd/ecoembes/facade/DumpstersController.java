@@ -64,7 +64,7 @@ public class DumpstersController {
 	    @Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true, example = "1")
 	    @PathVariable long dumpsterId,
 	    @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
-        @RequestParam String token,
+        @RequestParam("token") String token,
         @Parameter(name = "fillLevel", description = "New fill level of the dumpster (GREEN = almost empty, ORANGE = almost full, RED = full)", required = true)
         @RequestParam FillLevel fillLevel,
         @Parameter(name = "numContainers", description = "New number of containers in the dumpster", required = true)
@@ -92,7 +92,7 @@ public class DumpstersController {
     @PostMapping("/new-dumpster")
     public ResponseEntity<DumpsterDTO> createDumpster(
     		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true, example = "1a2b3c4d-5e6f-7890-abcd-ef1234567890")
-            @RequestParam String token,
+            @RequestParam("token") String token,
 //            @io.swagger.v3.oas.annotations.parameters.RequestBody(
 //                description = "Information about the dumpster to be created", required = true)
             @RequestBody DumpsterCreationDTO dto){
@@ -131,7 +131,7 @@ public class DumpstersController {
     @GetMapping("/all-dumpsters")
     public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(
     		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
-    		@RequestParam String token) {
+    		@RequestParam("token") String token) {
     	
     	// get all dumpsters possibly with authentication check
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
@@ -157,7 +157,7 @@ public class DumpstersController {
     @GetMapping("/{dumpsterId}/usage")
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
             @PathVariable long dumpsterId,
-            @RequestParam String token,
+            @RequestParam("token") String token,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
@@ -184,7 +184,7 @@ public class DumpstersController {
     @GetMapping("/recycling-plants")
     public ResponseEntity<List<RecyclingPlantDTO>> getRecyclingPlants(
     		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
-    		@RequestParam String token) {
+    		@RequestParam("token") String token) {
     	
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
@@ -210,7 +210,7 @@ public class DumpstersController {
     		@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
             @PathVariable long plantId,
             @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
-            @RequestParam String token,
+            @RequestParam("token") String token,
             @Parameter(name = "date", description = "Date for which the capacity is requested (ISO format yyyy-MM-dd)", required = true)
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
     			
@@ -244,7 +244,7 @@ public class DumpstersController {
 //			@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
             @PathVariable long plantId,
 //            @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
-            @RequestParam String token,
+            @RequestParam("token") String token,
 //            @io.swagger.v3.oas.annotations.parameters.RequestBody(
 //                description = "List of dumpster Ids to assign to the plant", required = true)               
             @Valid @RequestBody List<Long> dumpsterIds) {
@@ -268,7 +268,7 @@ public class DumpstersController {
     	    description = "Dumpsters in a postal code area on a given day.")
     @GetMapping("/status")
     public ResponseEntity<List<DumpsterDTO>> getDumpstersStatus(
-            @RequestParam String token,
+            @RequestParam("token") String token,
             @RequestParam String postalCode,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         if (authService.getEmployeeByToken(token).isEmpty()) {
