@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -77,13 +78,17 @@ public class DumpsterService {
 		return result;
 	}
 	
-	public boolean updateDumpster(long dumpsterId, FillLevel fillLevel, int numContainers) {
-		Dumpster dumpster = findDumpster(dumpsterId);
-		if (dumpster == null) {
-			return false;
-		}
-		dumpster.update(LocalDate.now(), numContainers, fillLevel);
-		return true;
+	public ResponseEntity<Void> updateDumpster(long dumpsterId, FillLevel fillLevel, int numContainers) {
+	    Dumpster dumpster = findDumpster(dumpsterId);
+	    if (dumpster == null) {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+	    if (numContainers < 0 || numContainers > dumpster.getCapacity()) {
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+
+	    dumpster.update(LocalDate.now(), numContainers, fillLevel);
+	    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	// Usage of a dumpster between two dates

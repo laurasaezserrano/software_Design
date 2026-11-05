@@ -1,7 +1,6 @@
 package es.deusto.ingenieria.sd.ecoembes.facade;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +21,8 @@ import es.deusto.ingenieria.sd.ecoembes.dto.PlantCapacityDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
-import es.deusto.ingenieria.sd.ecoembes.entity.Assignment;
-import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
-import es.deusto.ingenieria.sd.ecoembes.entity.RecyclingPlant;
 import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
 import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import es.deusto.ingenieria.sd.ecoembes.service.DumpsterService;
@@ -78,9 +74,8 @@ public class DumpstersController {
 		    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		
-		boolean ok = dumpsterService.updateDumpster(dumpsterId, fillLevel, numContainers);
-		return new ResponseEntity<>(ok ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
-			
+		return dumpsterService.updateDumpster(dumpsterId, fillLevel, numContainers);
+	    
     }
 
     //POST create a new dumpster
