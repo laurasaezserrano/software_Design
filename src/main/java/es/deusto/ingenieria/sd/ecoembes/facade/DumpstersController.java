@@ -86,7 +86,7 @@ public class DumpstersController {
 			@ApiResponse(responseCode = "400", description = "Bad request - invalid dumpster data")
 				})
     
-    @PostMapping("/dumpsters")
+    @PostMapping("/new-dumpster")
     public ResponseEntity<DumpsterDTO> createDumpster(
     		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true, example = "1a2b3c4d-5e6f-7890-abcd-ef1234567890")
             @RequestBody String token,
@@ -125,7 +125,7 @@ public class DumpstersController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token")
 		})
     
-    @GetMapping("/dumpsters")
+    @GetMapping("/all-dumpsters")
     public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(
     		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
     		@RequestParam String token) {
