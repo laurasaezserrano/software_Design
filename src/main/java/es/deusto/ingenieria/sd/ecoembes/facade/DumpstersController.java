@@ -24,6 +24,8 @@ import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
 import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import es.deusto.ingenieria.sd.ecoembes.service.DumpsterService;
 import es.deusto.ingenieria.sd.ecoembes.service.RecyclingPlantService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 public class DumpstersController {
@@ -51,6 +53,15 @@ public class DumpstersController {
 		
     }
 
+    //POST create a new dumpster
+    @Operation(
+		summary = "Create a new dumpster", 
+		description = "Creates a new dumpster with the specified fill level and number of containers.",
+		responses = {
+			@ApiResponse(responseCode = "201", description = "Dumpster created successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token")
+				})
+    
     @PostMapping("/dumpsters")
     public ResponseEntity<DumpsterDTO> createDumpster(@RequestParam String token,
                                                       @Valid @RequestBody FillLevel fillLevel, int numContainers, DumpsterDTO dto, Dumpster d) {
@@ -64,7 +75,16 @@ public class DumpstersController {
 
         return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
     }
-
+    
+    //GET all dumpsters
+    @Operation(
+    	summary = "Get all dumpsters", 
+    	description = "Returns a list of all dumpsters in the system.",
+    	responses = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved list of dumpsters"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token")
+		})
+    
     @GetMapping("/dumpsters")
     public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(@RequestParam String token) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
@@ -76,6 +96,16 @@ public class DumpstersController {
         return new ResponseEntity<>(dumpsterService.getAllDumpsters(), HttpStatus.OK);
     }
 
+    //GET dumpster usage data
+    @Operation(
+		summary = "Get dumpster usage", 
+		description = "Returns the usage data for a specific dumpster within a given date range.",
+		responses =  {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved dumpster usage data"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token"),
+			@ApiResponse(responseCode = "404", description = "Dumpster not found")
+		})
+    
     @GetMapping("/dumpsters/{dumpsterId}/usage")
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
             @PathVariable long dumpsterId,
@@ -91,6 +121,14 @@ public class DumpstersController {
         return new ResponseEntity<List<DumpsterUsageDTO>>(HttpStatus.OK);
     }
     
+    //GET all recycling plants
+    @Operation(
+    	summary = "Get recycling plants",
+    	description = "Returns a list of all recycling plants in the system.",
+    	responses = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved list of recycling plants"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token")
+					})
     @GetMapping("/recycling-plants")
     public ResponseEntity<List<RecyclingPlantDTO>> getRecyclingPlants(@RequestParam String token) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
@@ -101,6 +139,16 @@ public class DumpstersController {
 
 		return new ResponseEntity<>(plantService.getAllPlants(), HttpStatus.OK);
 	}
+    
+    //GET recycling plant capacity
+    @Operation(
+		summary = "Get recycling plant capacity",
+		description = "Returns the capacity of a specific recycling plant.",
+		responses = {
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved recycling plant capacity"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token"),
+			@ApiResponse(responseCode = "404", description = "Recycling plant not found")
+		})
     
     @GetMapping("/recycling-plants/{plantId}/capacity")
     public ResponseEntity<Float> getRecyclingPlantCapacity(
@@ -120,6 +168,16 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+    
+    //POST assign dumpsters to recycling plant
+    @Operation(
+    	summary = "Assign dumpsters to recycling plant",
+    	description = "Assigns a list of dumpsters to a specific recycling plant.",
+    	responses = {
+				@ApiResponse(responseCode = "204", description = "Successfully assigned dumpsters to recycling plant"),
+				@ApiResponse(responseCode = "400", description = "Bad request - invalid dumpster IDs or plant ID"),
+				@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token")
+					})
     
 	@PostMapping("/recycling-plants/{plantId}/dumpsters")
 	public ResponseEntity<Void> assignDumpstersToPlant(
