@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
@@ -75,23 +76,49 @@ public class DumpstersController {
     public ResponseEntity<DumpsterDTO> createDumpster(
     		@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Authentication token of the employee", required = true)
     		@RequestBody String token,
-    		@Parameter(description = "Fill level of the dumpster", required = true)
-    		@PathVariable FillLevel fillLevel,
-    		@Parameter(description = "Number of containers in the dumpster", required = true)
-    		@PathVariable int numContainers,
-    		@Parameter(description = "Details of the dumpster to be created", required = true)
-    		@RequestBody DumpsterDTO dto,
-    		@Parameter(description = "Details of the dumpster to be created", required = true)
-    		@RequestBody Dumpster d) {
-        Optional<Employee> employee = authService.getEmployeeByToken(token);
-
-        if (employee.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        DumpsterDTO newDumpster = dumpsterService.createDumpster(fillLevel, numContainers, dto, d);
-
-        return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
+    		@Parameter(description = "Information about the dumpster to be created", required = true)
+    		@RequestBody DumpsterCreationDTO dto) {
+    	Optional<Employee> employee = authService.getEmployeeByToken(token);
+    	
+    	if (employee.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+    	
+    	DumpsterCreationDTO dumpsterCreationDTO = new DumpsterCreationDTO(
+				dto.getLocation(),
+				dto.getPostalCode(),
+				dto.getCapacity(),
+				dto.getNumContainers(),
+				dto.getFillLevel()
+		);
+    	
+    	
+		DumpsterDTO newDumpster = dumpsterService.createDumpster(dumpsterCreationDTO);
+		
+		return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
+    	
+    }
+    	
+//    		@Parameter(description = "Fill level of the dumpster", required = true)
+//    		@PathVariable FillLevel fillLevel,
+//    		@Parameter(description = "Number of containers in the dumpster", required = true)
+//    		@PathVariable int numContainers,
+//    		@Parameter(description = "Details of the dumpster to be created", required = true)
+//    		@RequestBody DumpsterDTO dto,
+//    		@Parameter(description = "Details of the dumpster to be created", required = true)
+//    		@RequestBody Dumpster d
+    	
+    	
+    	
+//        Optional<Employee> employee = authService.getEmployeeByToken(token);
+//
+//        if (employee.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        DumpsterDTO newDumpster = dumpsterService.createDumpster(fillLevel, numContainers, dto, d);
+//
+//        return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
     }
     
     //GET all dumpsters

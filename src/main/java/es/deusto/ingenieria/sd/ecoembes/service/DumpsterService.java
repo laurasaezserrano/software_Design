@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
 //import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 //import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUpdateDTO;
@@ -52,7 +53,7 @@ public class DumpsterService {
 
 		FillLevel level;
 		try {
-			level = FillLevel.valueOf(dto.getStatus().toUpperCase());
+			level = FillLevel.valueOf(dto.getFillLevel().name());
 		} catch (IllegalArgumentException e) {
 			return false;
 		}
@@ -102,6 +103,15 @@ public class DumpsterService {
 	}
 
 	private DumpsterDTO toDTO(Dumpster dumpster) {
-		return new DumpsterDTO(dumpster.getId(), dumpster.getLocation(), dumpster.getFillLevel().name());
+		return new DumpsterDTO(dumpster.getId(), dumpster.getLocation(), dumpster.getPostalCode(), dumpster.getCapacity(), dumpster.getContainers(), dumpster.getFillLevel());
+	}
+
+	public DumpsterDTO createDumpster(DumpsterCreationDTO dumpsterCreationDTO) {
+		Dumpster dumpster = new Dumpster(nextId, dumpsterCreationDTO.getLocation(), dumpsterCreationDTO.getPostalCode(), dumpsterCreationDTO.getCapacity());
+		dumpster.update(LocalDate.now(), dumpsterCreationDTO.getNumContainers(), dumpsterCreationDTO.getFillLevel());
+		dumpsters.add(dumpster);
+		nextId++;
+		return toDTO(dumpster);
+		
 	}
 }

@@ -117,4 +117,8 @@ public class Dumpster {
 	@Override
 	public int hashCode() { return Objects.hash(id); }
 
+	public int getNumContainers() {
+		return containers;
+	}
+
 }
