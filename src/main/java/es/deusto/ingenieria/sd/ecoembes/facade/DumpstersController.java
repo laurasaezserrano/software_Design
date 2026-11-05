@@ -89,7 +89,7 @@ public class DumpstersController {
     @PostMapping("/new-dumpster")
     public ResponseEntity<DumpsterDTO> createDumpster(
     		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true, example = "1a2b3c4d-5e6f-7890-abcd-ef1234567890")
-            @RequestBody String token,
+            @RequestParam String token,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Information about the dumpster to be created", required = true)
             @RequestBody DumpsterCreationDTO dto){
