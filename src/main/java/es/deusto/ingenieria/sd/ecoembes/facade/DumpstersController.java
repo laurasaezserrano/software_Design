@@ -158,8 +158,8 @@ public class DumpstersController {
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
             @PathVariable long dumpsterId,
             @RequestParam("token") String token,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @RequestParam("start date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("end date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
 
         if (employee.isEmpty()) {
@@ -269,8 +269,8 @@ public class DumpstersController {
     @GetMapping("/status")
     public ResponseEntity<List<DumpsterDTO>> getDumpstersStatus(
             @RequestParam("token") String token,
-            @RequestParam String postalCode,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @RequestParam("postal code") String postalCode,
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         if (authService.getEmployeeByToken(token).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
