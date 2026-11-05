@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
@@ -26,8 +28,12 @@ import es.deusto.ingenieria.sd.ecoembes.service.DumpsterService;
 import es.deusto.ingenieria.sd.ecoembes.service.RecyclingPlantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@RestController
+@RequestMapping("/dumpsters")
+@Tag(name = "Dumpsters and Recycling Plants", description = "Operations related to dumpsters and recycling plants")
 public class DumpstersController {
 
 	private final DumpsterService dumpsterService;
