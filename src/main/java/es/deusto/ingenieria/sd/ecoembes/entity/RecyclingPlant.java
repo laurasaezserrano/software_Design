@@ -1,6 +1,8 @@
 package es.deusto.ingenieria.sd.ecoembes.entity;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class RecyclingPlant {
@@ -8,16 +10,14 @@ public class RecyclingPlant {
 	private long id;
 	private String name;
 	private String location;
-	private float capacity;
-	private LocalDate date;
+	private Map<LocalDate, Float> capacityByDate = new HashMap<>();
 
 	//CONSTRUCTORS
 	public RecyclingPlant(long id, String name, String location, float capacity, LocalDate date) {
 		this.id = id;
 		this.name = name;
 		this.location = location;
-		this.setCapacity(capacity);
-		this.setDate(LocalDate.now());
+		this.setCapacity(date, capacity);
 	}
 
 	public RecyclingPlant(long id, String name, String location) {
@@ -66,32 +66,11 @@ public class RecyclingPlant {
 	@Override
 	public int hashCode() { return Objects.hash(id); }
 
-	public float getCapacity() {
-		return capacity;
-	}
-	
 	public float getCapacityByDate(LocalDate date) {
-		if (this.date.equals(date)) {
-			return capacity;
-		} else {
-			return 0;
-		}
+		return capacityByDate.getOrDefault(date, 0f);
 	}
-
-	public void setCapacity(float capacity) {
-		this.capacity = capacity;
-	}
-	
+ 
 	public void setCapacity(LocalDate date, float capacity) {
-		this.date = date;
-		this.capacity = capacity;
-	}
-
-	public LocalDate getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDate date) {
-		this.date = date;
+		this.capacityByDate.put(date, capacity);
 	}
 }

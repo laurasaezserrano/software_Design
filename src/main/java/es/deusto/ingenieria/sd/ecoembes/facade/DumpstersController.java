@@ -213,7 +213,7 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		float capacity = plantService.getPlantCapacity(plantId);
+		float capacity = plantService.getPlantCapacity(plantId, date);
 
 		if (capacity >= 0) {
 			return new ResponseEntity<>(HttpStatus.OK);

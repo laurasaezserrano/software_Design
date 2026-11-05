@@ -35,18 +35,13 @@ public class RecyclingPlantService {
 		return result;
 	}
 
-	public float getPlantCapacity(long plantId) {
+	public float getPlantCapacity(long plantId, LocalDate date) {
 		RecyclingPlant plant = findPlant(plantId);
 		if (plant == null) {
 			return 0;
 		}
 
-		LocalDate today = LocalDate.now();
-		float capacity = plant.getCapacityByDate(today);
-		if (capacity == 0) {
-			return 0;
-		}
-
+		float capacity = plant.getCapacityByDate(date);
 		return capacity;
 	}
 
