@@ -29,6 +29,8 @@ import es.deusto.ingenieria.sd.ecoembes.service.RecyclingPlantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -69,8 +71,17 @@ public class DumpstersController {
 				})
     
     @PostMapping("/dumpsters")
-    public ResponseEntity<DumpsterDTO> createDumpster(@RequestParam String token,
-                                                      @Valid @RequestBody FillLevel fillLevel, int numContainers, DumpsterDTO dto, Dumpster d) {
+    public ResponseEntity<DumpsterDTO> createDumpster(
+    		@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Authentication token of the employee", required = true)
+    		@RequestBody String token,
+    		@Parameter(description = "Fill level of the dumpster", required = true)
+    		@PathVariable FillLevel fillLevel,
+    		@Parameter(description = "Number of containers in the dumpster", required = true)
+    		@PathVariable int numContainers,
+    		@Parameter(description = "Details of the dumpster to be created", required = true)
+    		@RequestBody DumpsterDTO dto,
+    		@Parameter(description = "Details of the dumpster to be created", required = true)
+    		@RequestBody Dumpster d) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
 
         if (employee.isEmpty()) {
@@ -93,13 +104,15 @@ public class DumpstersController {
     
     @GetMapping("/dumpsters")
     public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(@RequestParam String token) {
-        Optional<Employee> employee = authService.getEmployeeByToken(token);
+    	// get all dumpsters possibly with authentication check
+		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
-        if (employee.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+		if (employee.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 
-        return new ResponseEntity<>(dumpsterService.getAllDumpsters(), HttpStatus.OK);
+		List<DumpsterDTO> dumpsters = dumpsterService.getAllDumpsters();
+		return new ResponseEntity<>(dumpsters, HttpStatus.OK);
     }
 
     //GET dumpster usage data
