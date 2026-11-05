@@ -8,10 +8,15 @@ import es.deusto.ingenieria.sd.ecoembes.dto.LoginRequestDTO;
 import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RequestMapping("/auth")
 @RestController
+@Tag(name = "Authentication", description = "Login and logout operations for Ecoembes employees")
 public class EcoembesAuthController {
 
     private final AuthService authService;
@@ -30,7 +35,11 @@ public class EcoembesAuthController {
 		})
     
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDTO credentials) {
+    public ResponseEntity<String> login(
+    	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Employee credentials (email and password)", required = true)
+             @Valid @RequestBody LoginRequestDTO credentials) {
+    	
         String token = authService.login(credentials.getEmail(), credentials.getPassword());
 
         if (token != null) {
@@ -50,7 +59,10 @@ public class EcoembesAuthController {
 					})
     
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestParam String token) {
+    public ResponseEntity<Void> logout(
+    		@Parameter(name="token", description = "Authentication token of the employee", required = true)
+    		@RequestParam String token) {
+    	
         boolean loggedOut = authService.logout(token);
 
         if (loggedOut) {

@@ -20,7 +20,6 @@ import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
-import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
 import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
@@ -28,11 +27,9 @@ import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import es.deusto.ingenieria.sd.ecoembes.service.DumpsterService;
 import es.deusto.ingenieria.sd.ecoembes.service.RecyclingPlantService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Parameter;
-
-
 import jakarta.validation.Valid;
 
 @RestController
@@ -53,14 +50,28 @@ public class DumpstersController {
 		this.authService = authService;
 	}
 	
+	@Operation(
+	    summary = "Update dumpster status",
+	    description = "Updates the fill level and the number of containers of an existing dumpster.",
+	    responses = {
+	         @ApiResponse(responseCode = "204", description = "Dumpster status updated successfully"),
+	         @ApiResponse(responseCode = "400", description = "Bad request - invalid fill level or number of containers"),
+	         @ApiResponse(responseCode = "404", description = "Dumpster not found")
+	        })
     @PutMapping("/dumpsters/{dumpsterId}/status")
-    public ResponseEntity<Void> updateDumpster(@PathVariable long dumpsterId,
-    		@RequestBody FillLevel fillLevel,
-    		@RequestBody int numContainers) {
-		dumpsterService.updateDumpster(dumpsterId, fillLevel, numContainers);
-
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> updateDumpster( 
+	    @Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true, example = "1")
+	    @PathVariable long dumpsterId,
+	    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+	        description = "New fill level of the dumpster (GREEN = almost empty, ORANGE = almost full, RED = full)", required = true)
+	    	@RequestBody FillLevel fillLevel,
+	    	@Parameter(description = "New number of containers in the dumpster", required = true, example = "3")
+	    	@RequestBody int numContainers) {
 		
+			dumpsterService.updateDumpster(dumpsterId, fillLevel, numContainers);
+	
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			
     }
 
     //POST create a new dumpster
@@ -74,10 +85,12 @@ public class DumpstersController {
     
     @PostMapping("/dumpsters")
     public ResponseEntity<DumpsterDTO> createDumpster(
-    		@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Authentication token of the employee", required = true)
-    		@RequestBody String token,
-    		@Parameter(description = "Information about the dumpster to be created", required = true)
-    		@RequestBody DumpsterCreationDTO dto) {
+    		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true, example = "1a2b3c4d-5e6f-7890-abcd-ef1234567890")
+            @RequestBody String token,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Information about the dumpster to be created", required = true)
+            @RequestBody DumpsterCreationDTO dto){
+    	
     	Optional<Employee> employee = authService.getEmployeeByToken(token);
     	
     	if (employee.isEmpty()) {
@@ -110,7 +123,10 @@ public class DumpstersController {
 		})
     
     @GetMapping("/dumpsters")
-    public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(@RequestParam String token) {
+    public ResponseEntity<List<DumpsterDTO>> getAllDumpsters(
+    		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
+    		@RequestParam String token) {
+    	
     	// get all dumpsters possibly with authentication check
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
@@ -156,7 +172,10 @@ public class DumpstersController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token")
 					})
     @GetMapping("/recycling-plants")
-    public ResponseEntity<List<RecyclingPlantDTO>> getRecyclingPlants(@RequestParam String token) {
+    public ResponseEntity<List<RecyclingPlantDTO>> getRecyclingPlants(
+    		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
+    		@RequestParam String token) {
+    	
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
 		if (employee.isEmpty()) {
@@ -178,8 +197,11 @@ public class DumpstersController {
     
     @GetMapping("/recycling-plants/{plantId}/capacity")
     public ResponseEntity<Float> getRecyclingPlantCapacity(
-			@PathVariable long plantId,
-			@RequestParam String token) {
+    		@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
+            @PathVariable int plantId,
+            @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true) 
+    		@RequestParam String token) {
+    			
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
 		if (employee.isEmpty()) {
@@ -207,9 +229,13 @@ public class DumpstersController {
     
 	@PostMapping("/recycling-plants/{plantId}/dumpsters")
 	public ResponseEntity<Void> assignDumpstersToPlant(
-			@PathVariable long plantId,
-			@RequestParam String token,
-			@Valid @RequestBody List<DumpsterDTO> dumpsters) {
+			@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
+            @PathVariable int plantId,
+            @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
+            @RequestParam String token,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "List of dumpsters to assign to the plant (only their ids are used)", required = true)               
+            @Valid @RequestBody List<DumpsterDTO> dumpsters) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
 		if (employee.isEmpty()) {
