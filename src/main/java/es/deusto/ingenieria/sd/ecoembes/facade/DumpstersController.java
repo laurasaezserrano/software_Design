@@ -59,7 +59,7 @@ public class DumpstersController {
 	         @ApiResponse(responseCode = "400", description = "Bad request - invalid fill level or number of containers"),
 	         @ApiResponse(responseCode = "404", description = "Dumpster not found")
 	        })
-    @PutMapping("/dumpsters/{dumpsterId}/status")
+    @PutMapping("/{dumpsterId}/status")
     public ResponseEntity<Void> updateDumpster( 
 	    @Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true, example = "1")
 	    @PathVariable long dumpsterId,
@@ -93,8 +93,8 @@ public class DumpstersController {
     public ResponseEntity<DumpsterDTO> createDumpster(
     		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true, example = "1a2b3c4d-5e6f-7890-abcd-ef1234567890")
             @RequestParam String token,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Information about the dumpster to be created", required = true)
+//            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+//                description = "Information about the dumpster to be created", required = true)
             @RequestBody DumpsterCreationDTO dto){
     	
     	Optional<Employee> employee = authService.getEmployeeByToken(token);
@@ -154,7 +154,7 @@ public class DumpstersController {
 			@ApiResponse(responseCode = "404", description = "Dumpster not found")
 		})
     
-    @GetMapping("/dumpsters/{dumpsterId}/usage")
+    @GetMapping("/{dumpsterId}/usage")
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
             @PathVariable long dumpsterId,
             @RequestParam String token,
@@ -241,12 +241,12 @@ public class DumpstersController {
     
 	@PostMapping("/recycling-plants/{plantId}/dumpsters")
 	public ResponseEntity<Void> assignDumpstersToPlant(
-			@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
+//			@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
             @PathVariable long plantId,
-            @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
+//            @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
             @RequestParam String token,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "List of dumpster Ids to assign to the plant", required = true)               
+//            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+//                description = "List of dumpster Ids to assign to the plant", required = true)               
             @Valid @RequestBody List<Long> dumpsterIds) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
@@ -266,7 +266,7 @@ public class DumpstersController {
     // Check dumpster status
     @Operation(summary = "Check dumpster status",
     	    description = "Dumpsters in a postal code area on a given day.")
-    @GetMapping("/dumpsters/status")
+    @GetMapping("/status")
     public ResponseEntity<List<DumpsterDTO>> getDumpstersStatus(
             @RequestParam String token,
             @RequestParam String postalCode,
