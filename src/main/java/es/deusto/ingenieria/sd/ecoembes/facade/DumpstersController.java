@@ -70,9 +70,12 @@ public class DumpstersController {
         @Parameter(name = "numContainers", description = "New number of containers in the dumpster", required = true)
         @RequestParam int numContainers) {
 		
-			dumpsterService.updateDumpster(dumpsterId, fillLevel, numContainers);
-	
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		if (authService.getEmployeeByToken(token).isEmpty()) {
+		    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		
+		boolean ok = dumpsterService.updateDumpster(dumpsterId, fillLevel, numContainers);
+		return new ResponseEntity<>(ok ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
 			
     }
 
@@ -163,7 +166,11 @@ public class DumpstersController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         
-        return new ResponseEntity<List<DumpsterUsageDTO>>(HttpStatus.OK);
+        List<DumpsterUsageDTO> usage = dumpsterService.getDumpsterUsage(dumpsterId, startDate, endDate);
+        if (usage == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(usage, HttpStatus.OK);
     }
     
     //GET all recycling plants
@@ -199,7 +206,7 @@ public class DumpstersController {
 		})
     
     @GetMapping("/recycling-plants/{plantId}/capacity")
-    public ResponseEntity<Float> getRecyclingPlantCapacity(
+    public ResponseEntity<PlantCapacityDTO> getRecyclingPlantCapacity(
     		@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
             @PathVariable long plantId,
             @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
@@ -216,7 +223,7 @@ public class DumpstersController {
 		float capacity = plantService.getPlantCapacity(plantId, date);
 
 		if (capacity >= 0) {
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>(new PlantCapacityDTO(plantId, date, capacity), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -235,22 +242,19 @@ public class DumpstersController {
 	@PostMapping("/recycling-plants/{plantId}/dumpsters")
 	public ResponseEntity<Void> assignDumpstersToPlant(
 			@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
-            @PathVariable int plantId,
+            @PathVariable long plantId,
             @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
             @RequestParam String token,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "List of dumpsters to assign to the plant (only their ids are used)", required = true)               
-            @Valid @RequestBody List<DumpsterDTO> dumpsters) {
+                description = "List of dumpster Ids to assign to the plant", required = true)               
+            @Valid @RequestBody List<Long> dumpsterIds) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
 		if (employee.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		List<Long> dumpsterIds = dumpsters.stream().map(DumpsterDTO::getId).toList();
-		
 		boolean success = assignmentService.assignDumpstersToPlant(plantId, dumpsterIds, employee.get());
-
 
 		if (success) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -258,5 +262,19 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+    
+    // Check dumpster status
+    @Operation(summary = "Check dumpster status",
+    	    description = "Dumpsters in a postal code area on a given day.")
+    @GetMapping("/dumpsters/status")
+    public ResponseEntity<List<DumpsterDTO>> getDumpstersStatus(
+            @RequestParam String token,
+            @RequestParam String postalCode,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        if (authService.getEmployeeByToken(token).isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(dumpsterService.getDumpstersStatus(postalCode, date), HttpStatus.OK);
+    }
     
 }
