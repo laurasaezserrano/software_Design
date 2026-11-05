@@ -28,6 +28,13 @@ public class DumpsterService {
 		createExample("Gran Via 1, Bilbao", "48001", 10, 3, FillLevel.GREEN);
 		createExample("Calle Mayor 5, Bilbao", "48001", 10, 7, FillLevel.ORANGE);
 		createExample("Avenida Sabino Arana 10, Bilbao", "48013", 12, 12, FillLevel.RED);
+		
+		for (Dumpster d : dumpsters) {
+		    d.update(LocalDate.now().minusDays(2), 2, FillLevel.GREEN);
+		    d.update(LocalDate.now().minusDays(1), 5, FillLevel.ORANGE);
+		}
+		// End of CLAUDE examples
+		
 	}
 
 	private void createExample(String location, String postalCode, int capacity, int containers, FillLevel level) {
@@ -80,17 +87,43 @@ public class DumpsterService {
 	}
 
 	// Usage of a dumpster between two dates
-	public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
-		Dumpster dumpster = findDumpster(id);
-		if (dumpster == null) {
-			return ResponseEntity.notFound().build();
-		}
-
-		List<DumpsterUsageDTO> result = new ArrayList<>();
-		for (DumpsterUsage usage : dumpster.getUsageBetween(start, end)) {
-			result.add(new DumpsterUsageDTO(usage.getDate(), usage.getContainers(), usage.getFillLevel()));
-		}
-		return ResponseEntity.ok(result);
+//	public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
+//		Dumpster dumpster = findDumpster(id);
+//		if (dumpster == null) {
+//			return ResponseEntity.notFound().build();
+//		}
+//
+//		List<DumpsterUsageDTO> result = new ArrayList<>();
+//		for (DumpsterUsage usage : dumpster.getUsageBetween(start, end)) {
+//			result.add(new DumpsterUsageDTO(usage.getDate(), usage.getContainers(), usage.getFillLevel()));
+//		}
+//		return ResponseEntity.ok(result);
+//	}
+	
+	public List<DumpsterUsageDTO> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
+	    Dumpster dumpster = findDumpster(id);
+	    if (dumpster == null) {
+	        return null;                       // controller turns this into 404
+	    }
+	    List<DumpsterUsageDTO> result = new ArrayList<>();
+	    for (DumpsterUsage u : dumpster.getUsageBetween(start, end)) {
+	        result.add(new DumpsterUsageDTO(u.getDate(), u.getContainers(), u.getFillLevel()));
+	    }
+	    return result;
+	}
+	
+	public List<DumpsterDTO> getDumpstersStatus(String postalCode, LocalDate date) {
+	    List<DumpsterDTO> result = new ArrayList<>();
+	    for (Dumpster d : dumpsters) {
+	        if (!d.getPostalCode().equals(postalCode)) continue;
+	        for (DumpsterUsage u : d.getUsageHistory()) {
+	            if (u.getDate().equals(date)) {
+	                result.add(new DumpsterDTO(d.getId(), d.getLocation(), d.getPostalCode(),
+	                        d.getCapacity(), u.getContainers(), u.getFillLevel()));
+	            }
+	        }
+	    }
+	    return result;
 	}
 
 	public Dumpster findDumpster(long id) {

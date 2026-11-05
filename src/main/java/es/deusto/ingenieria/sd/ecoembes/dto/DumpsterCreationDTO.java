@@ -9,6 +9,10 @@ public class DumpsterCreationDTO {
 	private int numContainers;
 	private FillLevel fillLevel;
 	
+	public DumpsterCreationDTO() {
+		
+	}
+	
 	public DumpsterCreationDTO(String location, String postalCode, int capacity, int numContainers,
 			FillLevel fillLevel) {
 		super();

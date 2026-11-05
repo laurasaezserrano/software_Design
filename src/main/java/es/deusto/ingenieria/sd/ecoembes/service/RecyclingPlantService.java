@@ -38,7 +38,7 @@ public class RecyclingPlantService {
 	public float getPlantCapacity(long plantId, LocalDate date) {
 		RecyclingPlant plant = findPlant(plantId);
 		if (plant == null) {
-			return 0;
+			return -1; // Plant not found
 		}
 
 		float capacity = plant.getCapacityByDate(date);

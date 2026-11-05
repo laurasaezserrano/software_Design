@@ -25,18 +25,18 @@ public class AuthService {
 	}
 
 	// Returns the token when the credentials ==  correct
-	public ResponseEntity<String> login(LoginRequestDTO credentials) {
-		Employee employee = employees.get(credentials.getEmail());
-
-		if (employee == null) {
-			//if user not found or password incorrect
-			return ResponseEntity.status(401).body("Invalid credentials");
-		}
-
-		String token = String.valueOf(System.currentTimeMillis());
-		loggedEmployees.put(token, employee);
-		return ResponseEntity.ok(token);
-	}
+//	public ResponseEntity<String> login(LoginRequestDTO credentials) {
+//		Employee employee = employees.get(credentials.getEmail());
+//
+//		if (employee == null) {
+//			//if user not found or password incorrect
+//			return ResponseEntity.status(401).body("Invalid credentials");
+//		}
+//
+//		String token = String.valueOf(System.currentTimeMillis());
+//		loggedEmployees.put(token, employee);
+//		return ResponseEntity.ok(token);
+//	}
 	
 	public String login(String email, String password) {
 		Employee employee = employees.get(email);
