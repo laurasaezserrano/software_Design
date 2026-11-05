@@ -270,7 +270,7 @@ public class DumpstersController {
     public ResponseEntity<List<DumpsterDTO>> getDumpstersStatus(
             @RequestParam("token") String token,
             @RequestParam("postal code") String postalCode,
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+            @RequestParam(name="date", defaultValue="2026-11-03") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         if (authService.getEmployeeByToken(token).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
