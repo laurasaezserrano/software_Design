@@ -98,28 +98,7 @@ public class DumpstersController {
 		return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
     	
     }
-    	
-//    		@Parameter(description = "Fill level of the dumpster", required = true)
-//    		@PathVariable FillLevel fillLevel,
-//    		@Parameter(description = "Number of containers in the dumpster", required = true)
-//    		@PathVariable int numContainers,
-//    		@Parameter(description = "Details of the dumpster to be created", required = true)
-//    		@RequestBody DumpsterDTO dto,
-//    		@Parameter(description = "Details of the dumpster to be created", required = true)
-//    		@RequestBody Dumpster d
-    	
-    	
-    	
-//        Optional<Employee> employee = authService.getEmployeeByToken(token);
-//
-//        if (employee.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        DumpsterDTO newDumpster = dumpsterService.createDumpster(fillLevel, numContainers, dto, d);
-//
-//        return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
-    }
+
     
     //GET all dumpsters
     @Operation(
