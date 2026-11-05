@@ -86,7 +86,7 @@ public class DumpstersController {
 			@ApiResponse(responseCode = "201", description = "Dumpster created successfully"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token"),
 			@ApiResponse(responseCode = "400", description = "Bad request - invalid dumpster data")
-				})
+			})
     
     @PostMapping("/new-dumpster")
     public ResponseEntity<DumpsterDTO> createDumpster(
