@@ -1,6 +1,7 @@
 package es.deusto.ingenieria.sd.ecoembes.facade;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +22,11 @@ import es.deusto.ingenieria.sd.ecoembes.dto.PlantCapacityDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
+import es.deusto.ingenieria.sd.ecoembes.entity.Assignment;
+import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
+import es.deusto.ingenieria.sd.ecoembes.entity.RecyclingPlant;
 import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
 import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import es.deusto.ingenieria.sd.ecoembes.service.DumpsterService;
@@ -103,16 +107,7 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
     	
-    	DumpsterCreationDTO dumpsterCreationDTO = new DumpsterCreationDTO(
-				dto.getLocation(),
-				dto.getPostalCode(),
-				dto.getCapacity(),
-				dto.getNumContainers(),
-				dto.getFillLevel()
-		);
-    	
-    	
-		DumpsterDTO newDumpster = dumpsterService.createDumpster(dumpsterCreationDTO);
+    	DumpsterDTO newDumpster = dumpsterService.createDumpster(dto);
 		
 		return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
     	
@@ -158,8 +153,8 @@ public class DumpstersController {
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
             @PathVariable long dumpsterId,
             @RequestParam("token") String token,
-            @RequestParam("start date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("end date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         Optional<Employee> employee = authService.getEmployeeByToken(token);
 
         if (employee.isEmpty()) {
@@ -253,7 +248,7 @@ public class DumpstersController {
 		if (employee.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-
+		
 		boolean success = assignmentService.assignDumpstersToPlant(plantId, dumpsterIds, employee.get());
 
 		if (success) {
@@ -269,7 +264,7 @@ public class DumpstersController {
     @GetMapping("/status")
     public ResponseEntity<List<DumpsterDTO>> getDumpstersStatus(
             @RequestParam("token") String token,
-            @RequestParam("postal code") String postalCode,
+            @RequestParam("postalCode") String postalCode,
             @RequestParam(name="date", defaultValue="2026-11-03") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         if (authService.getEmployeeByToken(token).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

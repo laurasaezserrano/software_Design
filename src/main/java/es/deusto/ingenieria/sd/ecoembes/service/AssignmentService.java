@@ -30,39 +30,35 @@ public class AssignmentService {
 
 	public boolean assignDumpstersToPlant(long plantId, List<Long> dumpsterIds, Employee employee) {
 		RecyclingPlant plant = plantService.findPlant(plantId);
-		if (plant == null) {
-			return false;
-		}
-		if (dumpsterIds == null || dumpsterIds.isEmpty()) {
-			return false;
-		}
+	    if (plant == null || dumpsterIds == null || dumpsterIds.isEmpty()) {
+	        return false;
+	    }
 
-		List<Dumpster> selected = new ArrayList<>();
-		for (Long id : dumpsterIds) {
-			Dumpster dumpster = dumpsterService.findDumpster(id);
-			if (dumpster == null) {
-				return false;
-			}
-			selected.add(dumpster);
-		}
+	    List<Dumpster> selected = new ArrayList<>();
+	    for (Long id : dumpsterIds) {
+	        Dumpster dumpster = dumpsterService.findDumpster(id);
+	        if (dumpster == null) {
+	            return false;
+	        }
+	        selected.add(dumpster);
+	    }
 
-		LocalDate today = LocalDate.now();
-		float capacity = plant.getCapacityByDate(today);
-		Assignment assignment = new Assignment(nextId, today, plant, employee, selected);
-		float neededTons = assignment.getTotalContainers() * TONS_PER_CONTAINER;
+	    LocalDate today = LocalDate.now();
+	    float capacity = plant.getCapacityByDate(today);
+	    Assignment assignment = new Assignment(nextId, today, plant, employee, selected);
+	    float neededTons = assignment.getTotalContainers() * TONS_PER_CONTAINER;
 
-		if (capacity == 0 || neededTons > capacity) {
-			return false;
-		}
+	    // Check if plant has enough capacity
+	    if (neededTons > capacity) {
+	        return false;
+	    }
 
-		plant.setCapacity(today, capacity - neededTons);
-		assignments.add(assignment);
-		nextId++;
+	    // Update capacity, notify plant, and record assignment
+	    plant.setCapacity(today, capacity - neededTons);
+	    plant.notifyAssignment(assignment);
+	    assignments.add(assignment);
+	    nextId++;
 
-		System.out.println("Notification to " + plant.getName() + ": " + assignment.getTotalDumpsters()
-				+ " dumpsters and " + assignment.getTotalContainers() + " containers. Assigned by "
-				+ employee.getEmail());
-
-		return true;
+	    return true;
 	}
 }

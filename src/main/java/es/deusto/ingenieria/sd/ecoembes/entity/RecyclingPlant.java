@@ -1,7 +1,9 @@
 package es.deusto.ingenieria.sd.ecoembes.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -11,6 +13,7 @@ public class RecyclingPlant {
 	private String name;
 	private String location;
 	private Map<LocalDate, Float> capacityByDate = new HashMap<>();
+	private List<Assignment> assignments = new ArrayList<>();
 
 	//CONSTRUCTORS
 	public RecyclingPlant(long id, String name, String location, float capacity, LocalDate date) {
@@ -73,4 +76,15 @@ public class RecyclingPlant {
 	public void setCapacity(LocalDate date, float capacity) {
 		this.capacityByDate.put(date, capacity);
 	}
+	
+	public void notifyAssignment(Assignment assignment) {
+        this.assignments.add(assignment);
+        System.out.println("[PLANT NOTIFICATION] Plant '" + name + "' received assignment #" 
+            + assignment.getId() + " with " + assignment.getTotalDumpsters() + " dumpsters.");
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+    
 }
