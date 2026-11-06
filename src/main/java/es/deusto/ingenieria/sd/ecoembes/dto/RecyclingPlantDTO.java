@@ -1,20 +1,24 @@
 package es.deusto.ingenieria.sd.ecoembes.dto;
 
+import java.time.LocalDate;
+
 public class RecyclingPlantDTO {
 	private long id;
 	private String name;
 	private String location;
 	private float capacity;
+	private LocalDate date;
 
 	//CONSTRUCTORS
 	public RecyclingPlantDTO() {
 	}
 
-	public RecyclingPlantDTO(long id, String name, String location, float capacity) {
+	public RecyclingPlantDTO(long id, String name, String location, float capacity, LocalDate date) {
 		this.id = id;
 		this.name = name;
 		this.location = location;
 		this.capacity = capacity;
+		this.date = date;
 	}
 
 	public RecyclingPlantDTO(long id, String name, String location) {
@@ -59,5 +63,15 @@ public class RecyclingPlantDTO {
 	public void setCapacity(float capacity) {
 		this.capacity = capacity;
 	}
+	
+	//Date
+	public LocalDate getDate() {
+		return date;
+	}
+	
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+	
 
 }
