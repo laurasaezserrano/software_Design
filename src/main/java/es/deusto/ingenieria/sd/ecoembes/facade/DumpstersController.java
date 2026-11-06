@@ -30,9 +30,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-//For exception handling - Case of returning recycling plant capacity
-//CLAUDE SOLUTION for return a float
+
+//CLAUDE SOLUTION for return a float (capacity) instead of ResponseEntity<Float> in getRecyclingPlantCapacity method
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -258,7 +257,13 @@ public class DumpstersController {
     
     // Check dumpster status
     @Operation(summary = "Check dumpster status",
-    	    description = "Dumpsters in a postal code area on a given day.")
+    	    description = "Dumpsters in a postal code area on a given day.",
+    	    responses = {
+    	    		@ApiResponse(responseCode = "200", description = "Successfully retrieved dumpster status"),
+    	    		@ApiResponse(responseCode = "401", description = "Unauthorized access - invalid token"),
+    	    		@ApiResponse(responseCode = "404", description = "No dumpsters found for the given postal code and date")}
+    	    )
+    
     @GetMapping("/status")
     public ResponseEntity<FillLevel> getDumpstersStatus(
             @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
