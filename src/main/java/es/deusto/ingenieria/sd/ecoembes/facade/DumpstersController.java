@@ -233,19 +233,23 @@ public class DumpstersController {
     
 	@PostMapping("/recycling-plants/{plantId}/dumpsters")
 	public ResponseEntity<Void> assignDumpstersToPlant(
-//			@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
+			@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
             @PathVariable long plantId,
-//            @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
+            @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
             @RequestParam("token") String token,
-//            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-//                description = "List of dumpster Ids to assign to the plant", required = true)               
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "List of dumpster Ids to assign to the plant", required = true)               
             @Valid @RequestBody List<Long> dumpsterIds) {
 		Optional<Employee> employee = authService.getEmployeeByToken(token);
-
+		
 		if (employee.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		
+		  if (dumpsterIds == null || dumpsterIds.isEmpty()) {
+		      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		  }
+		  
 		boolean success = assignmentService.assignDumpstersToPlant(plantId, dumpsterIds, employee.get());
 
 		if (success) {
