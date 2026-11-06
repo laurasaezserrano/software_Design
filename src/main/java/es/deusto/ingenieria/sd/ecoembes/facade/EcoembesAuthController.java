@@ -5,13 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import es.deusto.ingenieria.sd.ecoembes.dto.LoginRequestDTO;
-import es.deusto.ingenieria.sd.ecoembes.dto.LoginResponseDTO;
 import es.deusto.ingenieria.sd.ecoembes.service.AuthService;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -36,11 +34,11 @@ public class EcoembesAuthController {
 		})
     
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(
+    public ResponseEntity<String> login(
             @Valid @RequestBody LoginRequestDTO credentials) {
         String token = authService.login(credentials.getEmail(), credentials.getPassword());
         if (token != null) {
-            return new ResponseEntity<>(new LoginResponseDTO(token), HttpStatus.OK);
+            return new ResponseEntity<>(token, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
