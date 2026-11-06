@@ -31,6 +31,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+//For exception handling - Case of returning recycling plant capacity
+//CLAUDE SOLUTION for return a float
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/dumpsters")
@@ -195,28 +198,28 @@ public class DumpstersController {
 		})
     
     @GetMapping("/recycling-plants/{plantId}/capacity")
-    public ResponseEntity<Float> getRecyclingPlantCapacity(
-    		@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
+    public float getRecyclingPlantCapacity(
+            @Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
             @PathVariable long plantId,
             @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
             @RequestParam("token") String token,
             @Parameter(name = "date", description = "Date for which the capacity is requested (ISO format yyyy-MM-dd)", required = true)
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-    			
-		Optional<Employee> employee = authService.getEmployeeByToken(token);
 
-		if (employee.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+        Optional<Employee> employee = authService.getEmployeeByToken(token);
 
-		float capacity = plantService.getPlantCapacity(plantId, date);
+        if (employee.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
+        }
 
-		if (capacity >= 0) {
-			return new ResponseEntity<>(capacity, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
+        float capacity = plantService.getPlantCapacity(plantId, date);
+
+        if (capacity < 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recycling plant not found");
+        }
+
+        return capacity;
+    }
     
     //POST assign dumpsters to recycling plant
     @Operation(
