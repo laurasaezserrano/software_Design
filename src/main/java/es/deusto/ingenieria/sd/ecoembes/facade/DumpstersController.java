@@ -196,7 +196,7 @@ public class DumpstersController {
 		})
     
     @GetMapping("/recycling-plants/{plantId}/capacity")
-    public ResponseEntity<PlantCapacityDTO> getRecyclingPlantCapacity(
+    public ResponseEntity<Float> getRecyclingPlantCapacity(
     		@Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
             @PathVariable long plantId,
             @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
@@ -213,7 +213,7 @@ public class DumpstersController {
 		float capacity = plantService.getPlantCapacity(plantId, date);
 
 		if (capacity >= 0) {
-			return new ResponseEntity<>(new PlantCapacityDTO(plantId, date, capacity), HttpStatus.OK);
+			return new ResponseEntity<>(capacity, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
