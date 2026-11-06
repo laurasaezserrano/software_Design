@@ -34,7 +34,7 @@ public class RecyclingPlantService {
 	public List<RecyclingPlantDTO> getAllPlants() {
 		List<RecyclingPlantDTO> result = new ArrayList<>();
 		for (RecyclingPlant plant : plants) {
-			result.add(new RecyclingPlantDTO(plant.getId(), plant.getName(), plant.getLocation()));
+			result.add(new RecyclingPlantDTO(plant.getId(), plant.getName(), plant.getLocation(), plant.getCapacityByDate(plant.getDate()), plant.getDate()));
 		}
 		return result;
 	}
