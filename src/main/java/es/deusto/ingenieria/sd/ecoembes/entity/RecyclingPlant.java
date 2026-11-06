@@ -14,6 +14,7 @@ public class RecyclingPlant {
 	private String location;
 	private Map<LocalDate, Float> capacityByDate = new HashMap<>();
 	private List<Assignment> assignments = new ArrayList<>();
+	private LocalDate date;
 
 	//CONSTRUCTORS
 	public RecyclingPlant(long id, String name, String location, float capacity, LocalDate date) {
@@ -21,6 +22,7 @@ public class RecyclingPlant {
 		this.name = name;
 		this.location = location;
 		this.setCapacity(date, capacity);
+		this.date = date;
 	}
 
 	public RecyclingPlant(long id, String name, String location) {
@@ -86,5 +88,13 @@ public class RecyclingPlant {
     public List<Assignment> getAssignments() {
         return assignments;
     }
+    
+    public LocalDate getDate() {
+    	return date;
+    }
+    
+    public void setDate(LocalDate date) {
+		this.date = date;
+	}
     
 }

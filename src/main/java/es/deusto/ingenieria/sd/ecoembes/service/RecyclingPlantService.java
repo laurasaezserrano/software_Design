@@ -17,6 +17,10 @@ public class RecyclingPlantService {
 	public RecyclingPlantService() {
 		RecyclingPlant plasSB = new RecyclingPlant(1, "PlasSB Ltd.", "Bilbao");
 		RecyclingPlant contSocket = new RecyclingPlant(2, "ContSocket Ltd.", "Vitoria");
+		
+		plasSB.setDate(LocalDate.now());
+		contSocket.setDate(LocalDate.now());
+		
 
 		for (int i = 0; i < 10; i++) {
 			plasSB.setCapacity(LocalDate.now().plusDays(i), 50);
