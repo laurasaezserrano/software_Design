@@ -63,13 +63,13 @@ public class DumpstersController {
     @PutMapping("/{dumpsterId}/status")
     public ResponseEntity<Void> updateDumpster( 
 	    @Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true, example = "1")
-	    @PathVariable long dumpsterId,
+	    @PathVariable("dumpsterId") long dumpsterId,
 	    @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
         @RequestParam("token") String token,
         @Parameter(name = "fillLevel", description = "New fill level of the dumpster (GREEN = almost empty, ORANGE = almost full, RED = full)", required = true)
-        @RequestParam FillLevel fillLevel,
+        @RequestParam("fillLevel") FillLevel fillLevel,
         @Parameter(name = "numContainers", description = "New number of containers in the dumpster", required = true)
-        @RequestParam int numContainers) {
+        @RequestParam("numContainers") int numContainers) {
 		
 		if (authService.getEmployeeByToken(token).isEmpty()) {
 		    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -148,7 +148,7 @@ public class DumpstersController {
     @GetMapping("/{dumpsterId}/usage")
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
 			@Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true, example = "1")
-			@PathVariable long dumpsterId,
+			@PathVariable("dumpsterId") long dumpsterId,
 			@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
 			@RequestParam("token") String token,
 			@Parameter(name = "startDate", description = "Start of the period (ISO format yyyy-MM-dd)", required = true)
@@ -208,7 +208,7 @@ public class DumpstersController {
     @GetMapping("/recycling-plants/{plantId}/capacity")
     public float getRecyclingPlantCapacity(
             @Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
-            @PathVariable long plantId,
+            @PathVariable("plantId") long plantId,
             @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
             @RequestParam("token") String token,
             @Parameter(name = "date", description = "Date for which the capacity is requested (ISO format yyyy-MM-dd)", required = true)
@@ -237,7 +237,7 @@ public class DumpstersController {
     @PostMapping("/recycling-plants/{plantId}/dumpsters")
     public ResponseEntity<Void> assignDumpstersToPlant(
             @Parameter(name = "plantId", description = "Unique identifier of the recycling plant", required = true)
-            @PathVariable long plantId,
+            @PathVariable("plantId") long plantId,
             @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
             @RequestParam("token") String token,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
