@@ -117,18 +117,19 @@ public class DumpsterService {
 	    return result;
 	}
 	
-	public List<DumpsterDTO> getDumpstersStatus(String postalCode, LocalDate date) {
-	    List<DumpsterDTO> result = new ArrayList<>();
-	    for (Dumpster d : dumpsters) {
-	        if (!d.getPostalCode().equals(postalCode)) continue;
-	        for (DumpsterUsage u : d.getUsageHistory()) {
-	            if (u.getDate().equals(date)) {
-	                result.add(new DumpsterDTO(d.getId(), d.getLocation(), d.getPostalCode(),
-	                        d.getCapacity(), u.getContainers(), u.getFillLevel()));
+	public FillLevel getDumpstersStatus(String postalCode, LocalDate date) {
+	    FillLevel worstLevel = FillLevel.GREEN;
+
+	    for (Dumpster dumpster : dumpsters) {
+	        if (dumpster.getPostalCode().equals(postalCode)) {
+	            FillLevel level = dumpster.getFillLevelByDate(date);
+	            if (level.ordinal() > worstLevel.ordinal()) {
+	                worstLevel = level; 
 	            }
 	        }
 	    }
-	    return result;
+
+	    return worstLevel;
 	}
 
 	public Dumpster findDumpster(long id) {

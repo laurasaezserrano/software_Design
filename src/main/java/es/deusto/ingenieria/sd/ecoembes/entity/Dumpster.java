@@ -121,4 +121,13 @@ public class Dumpster {
 		return containers;
 	}
 
+	public FillLevel getFillLevelByDate(LocalDate date) {
+		for (DumpsterUsage usage : usageHistory) {
+			if (usage.getDate().equals(date)) {
+				return usage.getFillLevel();
+			}
+		}
+		return FillLevel.GREEN; // Default to GREEN if no record found for the date
+	}
+
 }

@@ -263,14 +263,17 @@ public class DumpstersController {
     @Operation(summary = "Check dumpster status",
     	    description = "Dumpsters in a postal code area on a given day.")
     @GetMapping("/status")
-    public ResponseEntity<List<DumpsterDTO>> getDumpstersStatus(
+    public ResponseEntity<FillLevel> getDumpstersStatus(
             @RequestParam("token") String token,
             @RequestParam("postalCode") String postalCode,
             @RequestParam(name="date", defaultValue="2026-11-03") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         if (authService.getEmployeeByToken(token).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(dumpsterService.getDumpstersStatus(postalCode, date), HttpStatus.OK);
+        
+        FillLevel status = dumpsterService.getDumpstersStatus(postalCode, date);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+        
     }
     
 }
