@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
-import es.deusto.ingenieria.sd.ecoembes.dto.PlantCapacityDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
