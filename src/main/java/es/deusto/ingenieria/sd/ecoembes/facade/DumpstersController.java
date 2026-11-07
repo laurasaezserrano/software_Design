@@ -62,7 +62,7 @@ public class DumpstersController {
 	        })
     @PutMapping("/{dumpsterId}/status")
     public ResponseEntity<Void> updateDumpster( 
-	    @Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true, example = "1")
+	    @Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true)
 	    @PathVariable("dumpsterId") long dumpsterId,
 	    @Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
         @RequestParam("token") String token,
@@ -147,7 +147,7 @@ public class DumpstersController {
     
     @GetMapping("/{dumpsterId}/usage")
     public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(
-			@Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true, example = "1")
+			@Parameter(name = "dumpsterId", description = "Unique identifier of the dumpster", required = true)
 			@PathVariable("dumpsterId") long dumpsterId,
 			@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
 			@RequestParam("token") String token,
