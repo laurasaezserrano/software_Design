@@ -8,12 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
-//import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
-import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
-//import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUpdateDTO;
-import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
+import es.deusto.ingenieria.sd.ecoembes.entity.DumpsterCreation;
 import es.deusto.ingenieria.sd.ecoembes.entity.DumpsterUsage;
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
 
@@ -45,15 +41,16 @@ public class DumpsterService {
 		nextId++;
 	}
 
-	public DumpsterDTO createDumpster(FillLevel fillLevel, int numContainers, DumpsterDTO dto, Dumpster d) {
-		Dumpster dumpster = new Dumpster(nextId, dto.getLocation(), d.getPostalCode(), d.getCapacity());
+	public Dumpster createDumpster(FillLevel fillLevel, int numContainers, Dumpster d) {
+		Dumpster dumpster = new Dumpster(nextId, d.getLocation(), d.getPostalCode(), d.getCapacity());
 		dumpsters.add(dumpster);
 		nextId++;
 
-		return toDTO(dumpster);
+		return (dumpster);
 	}
 
-	public boolean updateDumpster(long id, DumpsterDTO dto) {
+	//NEED CORRECTION
+	public boolean updateDumpster(long id, Dumpster d) {
 		Dumpster dumpster = findDumpster(id);
 		if (dumpster == null) {
 			return false;
@@ -61,19 +58,19 @@ public class DumpsterService {
 
 		FillLevel level;
 		try {
-			level = FillLevel.valueOf(dto.getFillLevel().name());
+			level = FillLevel.valueOf(d.getFillLevel().name());
 		} catch (IllegalArgumentException e) {
 			return false;
 		}
 
-		dumpster.update(LocalDate.now(), dto.getNumContainers(), level);
+		dumpster.update(LocalDate.now(), d.getNumContainers(), level);
 		return true;
 	}
 
-	public List<DumpsterDTO> getAllDumpsters() {
-		List<DumpsterDTO> result = new ArrayList<>();
+	public List<Dumpster> getAllDumpsters() {
+		List<Dumpster> result = new ArrayList<>();
 		for (Dumpster dumpster : dumpsters) {
-			result.add(toDTO(dumpster));
+			result.add((dumpster));
 		}
 		return result;
 	}
@@ -90,29 +87,15 @@ public class DumpsterService {
 	    dumpster.update(LocalDate.now(), numContainers, fillLevel);
 	    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
-	// Usage of a dumpster between two dates
-//	public ResponseEntity<List<DumpsterUsageDTO>> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
-//		Dumpster dumpster = findDumpster(id);
-//		if (dumpster == null) {
-//			return ResponseEntity.notFound().build();
-//		}
-//
-//		List<DumpsterUsageDTO> result = new ArrayList<>();
-//		for (DumpsterUsage usage : dumpster.getUsageBetween(start, end)) {
-//			result.add(new DumpsterUsageDTO(usage.getDate(), usage.getContainers(), usage.getFillLevel()));
-//		}
-//		return ResponseEntity.ok(result);
-//	}
 	
-	public List<DumpsterUsageDTO> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
+	public List<DumpsterUsage> getDumpsterUsage(long id, LocalDate start, LocalDate end) {
 	    Dumpster dumpster = findDumpster(id);
 	    if (dumpster == null) {
 	        return null;                       // controller turns this into 404
 	    }
-	    List<DumpsterUsageDTO> result = new ArrayList<>();
+	    List<DumpsterUsage> result = new ArrayList<>();
 	    for (DumpsterUsage u : dumpster.getUsageBetween(start, end)) {
-	        result.add(new DumpsterUsageDTO(u.getDate(), u.getContainers(), u.getFillLevel()));
+	        result.add(new DumpsterUsage(u.getDate(), u.getContainers(), u.getFillLevel()));
 	    }
 	    return result;
 	}
@@ -141,16 +124,13 @@ public class DumpsterService {
 		return null;
 	}
 
-	private DumpsterDTO toDTO(Dumpster dumpster) {
-		return new DumpsterDTO(dumpster.getId(), dumpster.getLocation(), dumpster.getPostalCode(), dumpster.getCapacity(), dumpster.getContainers(), dumpster.getFillLevel());
-	}
-
-	public DumpsterDTO createDumpster(DumpsterCreationDTO dumpsterCreationDTO) {
-		Dumpster dumpster = new Dumpster(nextId, dumpsterCreationDTO.getLocation(), dumpsterCreationDTO.getPostalCode(), dumpsterCreationDTO.getCapacity());
-		dumpster.update(LocalDate.now(), dumpsterCreationDTO.getNumContainers(), dumpsterCreationDTO.getFillLevel());
+	//NEED CORRECTION
+	public Dumpster createDumpster(DumpsterCreation dumpsterCreation) {
+		Dumpster dumpster = new Dumpster(nextId, dumpsterCreation.getLocation(), dumpsterCreation.getPostalCode(), dumpsterCreation.getCapacity());
+		dumpster.update(LocalDate.now(), dumpsterCreation.getNumContainers(), dumpsterCreation.getFillLevel());
 		dumpsters.add(dumpster);
 		nextId++;
-		return toDTO(dumpster);
+		return (dumpster);
 		
 	}
 }

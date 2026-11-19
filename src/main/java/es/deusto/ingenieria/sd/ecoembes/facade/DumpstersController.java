@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
+import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
+import es.deusto.ingenieria.sd.ecoembes.entity.DumpsterCreation;
+import es.deusto.ingenieria.sd.ecoembes.entity.DumpsterUsage;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
 import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
@@ -95,7 +97,7 @@ public class DumpstersController {
             @RequestParam("token") String token,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Information about the dumpster to be created", required = true)
-            @RequestBody DumpsterCreationDTO dto){
+            @RequestBody DumpsterCreation dumpsterCreation) {
     	
     	Optional<Employee> employee = authService.getEmployeeByToken(token);
     	
@@ -103,9 +105,9 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
     	
-    	DumpsterDTO newDumpster = dumpsterService.createDumpster(dto);
+    	Dumpster newDumpster = dumpsterService.createDumpster(dumpsterCreation);
 		
-		return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
+		return new ResponseEntity<>(toDTO(newDumpster), HttpStatus.CREATED);
     	
     }
 
@@ -130,9 +132,16 @@ public class DumpstersController {
 		if (employee.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-
-		List<DumpsterDTO> dumpsters = dumpsterService.getAllDumpsters();
-		return new ResponseEntity<>(dumpsters, HttpStatus.OK);
+		
+		// get all dumpsters from service
+		List<Dumpster> dumpsters = dumpsterService.getAllDumpsters();
+		
+		// transform all dumpsters to DTOs
+		List<DumpsterDTO> dumpsterDTOs = dumpsters.stream()
+				.map(this::toDTO)
+				.toList();
+		
+		return new ResponseEntity<>(dumpsterDTOs, HttpStatus.OK);
     }
 
     //GET dumpster usage data
@@ -164,13 +173,18 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
  
-		List<DumpsterUsageDTO> usage = dumpsterService.getDumpsterUsage(dumpsterId, startDate, endDate);
+		List<DumpsterUsage> usage = dumpsterService.getDumpsterUsage(dumpsterId, startDate, endDate);
+		
+		// transform usage data to DTOs
+		List<DumpsterUsageDTO> usageDTOs = usage.stream()
+				.map(u -> new DumpsterUsageDTO(u.getDate(), u.getContainers(), u.getFillLevel()))
+				.toList();
  
-		if (usage == null) {
+		if (usageDTOs == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
  
-		return new ResponseEntity<>(usage, HttpStatus.OK);
+		return new ResponseEntity<>(usageDTOs, HttpStatus.OK);
 	}
     
     //GET all recycling plants
@@ -282,5 +296,10 @@ public class DumpstersController {
         }
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
+    
+    
+    private DumpsterDTO toDTO(Dumpster dumpster) {
+		return new DumpsterDTO(dumpster.getId(), dumpster.getLocation(), dumpster.getPostalCode(), dumpster.getCapacity(), dumpster.getContainers(), dumpster.getFillLevel());
+	}
     
 }
