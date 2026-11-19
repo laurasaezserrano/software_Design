@@ -96,6 +96,8 @@ public class Dumpster {
 	public void update(LocalDate date, int containers, FillLevel fillLevel) {
 		this.containers = containers;
 		this.fillLevel = fillLevel;
+		// One record per day: a later update on the same day replaces it
+		this.usageHistory.removeIf(u -> u.getDate().equals(date));
 		this.usageHistory.add(new DumpsterUsage(date, containers, fillLevel));
 	}
 

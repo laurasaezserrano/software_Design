@@ -3,15 +3,13 @@ package es.deusto.ingenieria.sd.ecoembes.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
-//import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
-//import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUpdateDTO;
+import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUpdateDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
 import es.deusto.ingenieria.sd.ecoembes.entity.DumpsterUsage;
@@ -45,31 +43,6 @@ public class DumpsterService {
 		nextId++;
 	}
 
-	public DumpsterDTO createDumpster(FillLevel fillLevel, int numContainers, DumpsterDTO dto, Dumpster d) {
-		Dumpster dumpster = new Dumpster(nextId, dto.getLocation(), d.getPostalCode(), d.getCapacity());
-		dumpsters.add(dumpster);
-		nextId++;
-
-		return toDTO(dumpster);
-	}
-
-	public boolean updateDumpster(long id, DumpsterDTO dto) {
-		Dumpster dumpster = findDumpster(id);
-		if (dumpster == null) {
-			return false;
-		}
-
-		FillLevel level;
-		try {
-			level = FillLevel.valueOf(dto.getFillLevel().name());
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
-
-		dumpster.update(LocalDate.now(), dto.getNumContainers(), level);
-		return true;
-	}
-
 	public List<DumpsterDTO> getAllDumpsters() {
 		List<DumpsterDTO> result = new ArrayList<>();
 		for (Dumpster dumpster : dumpsters) {
@@ -78,17 +51,16 @@ public class DumpsterService {
 		return result;
 	}
 	
-	public ResponseEntity<Void> updateDumpster(long dumpsterId, FillLevel fillLevel, int numContainers) {
+	public void updateDumpster(long dumpsterId, DumpsterUpdateDTO dto) {
 	    Dumpster dumpster = findDumpster(dumpsterId);
 	    if (dumpster == null) {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        throw new NoSuchElementException("Dumpster not found");
 	    }
-	    if (numContainers < 0 || numContainers > dumpster.getCapacity()) {
-	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    if (dto.getNumContainers() > dumpster.getCapacity()) {
+	        throw new IllegalArgumentException("More containers than the dumpster capacity");
 	    }
 
-	    dumpster.update(LocalDate.now(), numContainers, fillLevel);
-	    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	    dumpster.update(LocalDate.now(), dto.getNumContainers(), dto.getFillLevel());
 	}
 
 	// Usage of a dumpster between two dates
@@ -146,6 +118,9 @@ public class DumpsterService {
 	}
 
 	public DumpsterDTO createDumpster(DumpsterCreationDTO dumpsterCreationDTO) {
+		if (dumpsterCreationDTO.getNumContainers() > dumpsterCreationDTO.getCapacity()) {
+			throw new IllegalArgumentException("More containers than the dumpster capacity");
+		}
 		Dumpster dumpster = new Dumpster(nextId, dumpsterCreationDTO.getLocation(), dumpsterCreationDTO.getPostalCode(), dumpsterCreationDTO.getCapacity());
 		dumpster.update(LocalDate.now(), dumpsterCreationDTO.getNumContainers(), dumpsterCreationDTO.getFillLevel());
 		dumpsters.add(dumpster);
