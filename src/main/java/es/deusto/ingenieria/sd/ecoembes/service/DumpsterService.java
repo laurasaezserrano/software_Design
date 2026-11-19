@@ -53,6 +53,7 @@ public class DumpsterService {
 		return toDTO(dumpster);
 	}
 
+	//NEED CORRECTION
 	public boolean updateDumpster(long id, DumpsterDTO dto) {
 		Dumpster dumpster = findDumpster(id);
 		if (dumpster == null) {
@@ -145,6 +146,7 @@ public class DumpsterService {
 		return new DumpsterDTO(dumpster.getId(), dumpster.getLocation(), dumpster.getPostalCode(), dumpster.getCapacity(), dumpster.getContainers(), dumpster.getFillLevel());
 	}
 
+	//NEED CORRECTION
 	public DumpsterDTO createDumpster(DumpsterCreationDTO dumpsterCreationDTO) {
 		Dumpster dumpster = new Dumpster(nextId, dumpsterCreationDTO.getLocation(), dumpsterCreationDTO.getPostalCode(), dumpsterCreationDTO.getCapacity());
 		dumpster.update(LocalDate.now(), dumpsterCreationDTO.getNumContainers(), dumpsterCreationDTO.getFillLevel());
