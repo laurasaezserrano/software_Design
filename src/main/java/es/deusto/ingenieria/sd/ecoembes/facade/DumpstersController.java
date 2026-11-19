@@ -20,6 +20,8 @@ import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterCreationDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.DumpsterUsageDTO;
 import es.deusto.ingenieria.sd.ecoembes.dto.RecyclingPlantDTO;
+import es.deusto.ingenieria.sd.ecoembes.entity.Dumpster;
+import es.deusto.ingenieria.sd.ecoembes.entity.DumpsterCreation;
 import es.deusto.ingenieria.sd.ecoembes.entity.Employee;
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
 import es.deusto.ingenieria.sd.ecoembes.service.AssignmentService;
@@ -90,12 +92,12 @@ public class DumpstersController {
 			})
     
     @PostMapping("/new-dumpster")
-    public ResponseEntity<DumpsterDTO> createDumpster(
+    public ResponseEntity<Dumpster> createDumpster(
     		@Parameter(name = "token", description = "Session token of the authenticated employee (obtained at login)", required = true)
             @RequestParam("token") String token,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Information about the dumpster to be created", required = true)
-            @RequestBody DumpsterCreationDTO dto){
+            @RequestBody DumpsterCreation dumCreation) {
     	
     	Optional<Employee> employee = authService.getEmployeeByToken(token);
     	
@@ -103,7 +105,7 @@ public class DumpstersController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
     	
-    	DumpsterDTO newDumpster = dumpsterService.createDumpster(dto);
+    	Dumpster newDumpster = dumpsterService.createDumpster(dumCreation);
 		
 		return new ResponseEntity<>(newDumpster, HttpStatus.CREATED);
     	
@@ -282,5 +284,10 @@ public class DumpstersController {
         }
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
+    
+    
+    private DumpsterDTO toDTO(Dumpster dumpster) {
+		return new DumpsterDTO(dumpster.getId(), dumpster.getLocation(), dumpster.getPostalCode(), dumpster.getCapacity(), dumpster.getContainers(), dumpster.getFillLevel());
+	}
     
 }
