@@ -3,6 +3,7 @@ package es.deusto.ingenieria.sd.ecoembes.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
@@ -28,17 +29,21 @@ public class AssignmentService {
 		this.plantService = plantService;
 	}
 
-	public boolean assignDumpstersToPlant(long plantId, List<Long> dumpsterIds, Employee employee) {
-		RecyclingPlant plant = plantService.findPlant(plantId);
-	    if (plant == null || dumpsterIds == null || dumpsterIds.isEmpty()) {
-	        return false;
+	// Returns the id of the new assignment
+	public long assignDumpstersToPlant(long plantId, List<Long> dumpsterIds, Employee employee) {
+	    if (dumpsterIds == null || dumpsterIds.isEmpty()) {
+	        throw new IllegalArgumentException("No dumpsters given");
+	    }
+	    RecyclingPlant plant = plantService.findPlant(plantId);
+	    if (plant == null) {
+	        throw new NoSuchElementException("Recycling plant not found");
 	    }
 
 	    List<Dumpster> selected = new ArrayList<>();
 	    for (Long id : dumpsterIds) {
 	        Dumpster dumpster = dumpsterService.findDumpster(id);
 	        if (dumpster == null) {
-	            return false;
+	            throw new NoSuchElementException("Dumpster " + id + " not found");
 	        }
 	        selected.add(dumpster);
 	    }
@@ -50,7 +55,7 @@ public class AssignmentService {
 
 	    // Check if plant has enough capacity
 	    if (neededTons > capacity) {
-	        return false;
+	        throw new IllegalStateException("Not enough capacity in the recycling plant");
 	    }
 
 	    // Update capacity, notify plant, and record assignment
@@ -59,6 +64,6 @@ public class AssignmentService {
 	    assignments.add(assignment);
 	    nextId++;
 
-	    return true;
+	    return assignment.getId();
 	}
 }

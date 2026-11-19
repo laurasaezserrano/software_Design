@@ -1,12 +1,20 @@
 package es.deusto.ingenieria.sd.ecoembes.dto;
 
 import es.deusto.ingenieria.sd.ecoembes.entity.FillLevel;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class DumpsterCreationDTO {
+	@NotBlank
 	private String location;
+	@NotBlank
 	private String postalCode;
+	@Min(1)
 	private int capacity;
+	@Min(0)
 	private int numContainers;
+	@NotNull
 	private FillLevel fillLevel;
 	
 	public DumpsterCreationDTO() {
